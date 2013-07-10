@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Xutianming Blog]]></title>
+  <link href="http://xutianming.github.io/atom.xml" rel="self"/>
+  <link href="http://xutianming.github.io/"/>
+  <updated>2013-07-10T10:44:52+08:00</updated>
+  <id>http://xutianming.github.io/</id>
+  <author>
+    <name><![CDATA[Xutianming]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+</feed>
