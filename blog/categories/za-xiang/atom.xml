@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[Xutianming Blog]]></title>
-  <link href="http://xutianming.github.io/atom.xml" rel="self"/>
+  <title><![CDATA[Category: 杂项 | Xutianming Blog]]></title>
+  <link href="http://xutianming.github.io/blog/categories/za-xiang/atom.xml" rel="self"/>
   <link href="http://xutianming.github.io/"/>
   <updated>2013-07-11T13:22:41+08:00</updated>
   <id>http://xutianming.github.io/</id>
@@ -23,15 +23,6 @@
 <p>由于现在这个博客很空，这几天我会陆续搬一些以前我自己写的东西在这上面，这样可以帮助我快速掌握这个博客的使用方法，并且也熟悉一下markdown的语法，以后真要写东西就不会为这些事情烦心了。</p>
 
 <p>终于有了属于自己的博客站点，好开心，感谢github，感谢octopress。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Creating a Github Blog Using Octopress]]></title>
-    <link href="http://xutianming.github.io/blog/2013/07/10/creating-a-github-blog-using-octopress/"/>
-    <updated>2013-07-10T10:56:00+08:00</updated>
-    <id>http://xutianming.github.io/blog/2013/07/10/creating-a-github-blog-using-octopress</id>
-    <content type="html"><![CDATA[
 ]]></content>
   </entry>
   
