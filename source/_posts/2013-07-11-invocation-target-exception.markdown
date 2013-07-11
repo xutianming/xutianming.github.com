@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "invocation-target-exception"
+title: "由invocationTargetException引发的思考"
 date: 2013-07-11 16:28
 comments: true
 categories: 杂项
