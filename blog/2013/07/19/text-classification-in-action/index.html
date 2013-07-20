@@ -123,11 +123,15 @@
 
 <p>如此一来，我们把文档用特征向量来表示了，接下来就是训练模型了。在上述过程的实现过程中，我没有遇到太大的问题，unix+python是很有利的文本处理工具，实现起来很快。我是用的svm工具是libsvm，使用也很简单，但是我确实在训练模型的时候遇到了一个问题。</p>
 
-<p>一般来讲，libsvm的使用流程是这样的：
-* svm-scale，对数据进行归一化处理，映射到[0,1]区间内
-* grid.py 寻找最优参数c和g
-* svm-train
-* svm-predict</p>
+<p>一般来讲，libsvm的使用流程是这样的：</p>
+
+<ul>
+<li>svm-scale，对数据进行归一化处理，映射到[0,1]区间内</li>
+<li>grid.py 寻找最优参数c和g</li>
+<li>svm-train</li>
+<li>svm-predict</li>
+</ul>
+
 
 <p>我第一次使用的时候，用信息增益选择特征，libsvm不太懂，也没去查太多的资料，略去了第二步，也就是我训练的时候没指定参数。这训练效果太差了，把所有的文档都分到了一类中。一开始我总怀疑特征提取的不好，于是换卡方校验，结果还是这样，之后开始怀疑我训练的方法不对，于是很快发现了问题。在指定c和g参数之后，训练结果非常好，对训练数据的准确率为100%，在测试集上的准确率为93.52%，比人家论文上的准确率还高，非常让人振奋。</p>
 
@@ -180,6 +184,8 @@
         <a class="basic-alignment left" href="/blog/2013/07/11/invocation-target-exception/" title="Previous Post: 由invocationTargetException引发的思考">&laquo; 由invocationTargetException引发的思考</a>
       
       
+        <a class="basic-alignment right" href="/blog/2013/07/20/understanding-kernel-function/" title="Next Post: 核函数理解">核函数理解 &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -196,11 +202,15 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (1)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (1)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (1)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (2)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/20/understanding-kernel-function/">核函数理解</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/19/text-classification-in-action/">文本分类实践</a>
@@ -255,7 +265,7 @@
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/文本挖掘' style='font-size: 130.0%'>文本挖掘(1)</a> <a href='/blog/categories/机器学习' style='font-size: 130.0%'>机器学习(1)</a> <a href='/blog/categories/杂项' style='font-size: 160.0%'>杂项(2)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/文本挖掘' style='font-size: 130.0%'>文本挖掘(1)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(2)</a> <a href='/blog/categories/杂项' style='font-size: 160.0%'>杂项(2)</a> </span>
 </section>
 
   

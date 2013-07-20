@@ -9,7 +9,7 @@
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="学习机器学习有一阵子了，先是仔细阅读了《统计学习方法》这本书，对目前比较流行的统计学习方法和模型有了大致的认识，比如朴素贝叶斯、逻辑斯蒂回归、支持向量机、隐马尔科夫模型等等。但是仅仅有理论上的认识是不够的，关键还是指导实践解决问题。 先前在百度实习的时候，已经对机器学习有了初步的认识， &hellip;">
+  <meta name="description" content="SVM相关的理论知识看过几遍，但是感觉一直都不是理解的很透彻，特别是核函数的概念。今天又查阅了大家写的学习笔记等资料，结合自己的实践经验，感觉对核函数的理解更进一步了，所以记录在这里。 一句话说明核函数的意义和作用：为使非线性可分问题转化为线性可分，将特征向量映射到高维，映射函数所满足的性质。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +71,62 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/07/20/understanding-kernel-function/">核函数理解</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-20T11:13:00+08:00" pubdate data-updated="true">Jul 20<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/07/20/understanding-kernel-function/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>SVM相关的理论知识看过几遍，但是感觉一直都不是理解的很透彻，特别是核函数的概念。今天又查阅了大家写的学习笔记等资料，结合自己的实践经验，感觉对核函数的理解更进一步了，所以记录在这里。</p>
+
+<p>一句话说明核函数的意义和作用：为使非线性可分问题转化为线性可分，将特征向量映射到高维，映射函数所满足的性质。</p>
+
+<p>具体说来，svm可以直接解决线性可分的分类问题，对于近似线性可分的问题，通过增加松弛变量，也可以实现分类。那么对于非线性可分的问题呢，比较直观的想法是映射，也就是通过把特征映射到高维，使非线性可分问题转化为线性可分的问题。但是就一般的实际问题来讲，寻找这个映射很困难，而且很难有可推广的方法。于是提出了kernel trick。可以绕过寻找这个映射函数。</p>
+
+<p>在理论公式的推导中，可以算出参数w的表示方法：</p>
+
+<p><img src="http://i.imgur.com/KqPVcLl.png?1" alt="Imgur" /></p>
+
+<p>于是分类超平面的函数也可以写成：</p>
+
+<p><img src="http://i.imgur.com/UVGLjMS.png?3" alt="Imgur" /></p>
+
+<p>这个公式中只有&lt;x(i),x>的内积形式，也就是说，我们映射之后，需要计算&lt;Fi(xi),Fi(x)>的内积。而我们定义的核函数，就是这一内积的形式。</p>
+
+<p><img src="http://i.imgur.com/lLicBOp.png?1" alt="Imgur" /></p>
+
+<p>如此一来，我们就可以用核函数直接替换内积，相当于，我们把原始的特征向量，映射到了高维，并且避免了寻找映射函数。而libsvm中推荐使用的RBF核函数，就是一个有着良好特性的核函数。可以将样本映射到一个更高维的空间，可以处理非线性的分类问题。而其关键的参数c和g分别为惩罚因子和核函数的参数。（RBF 核K(x, y) = exp(－γ || x －y ||的平方),γ > 0，g为gamma，就是r）。我们在使用libsvm训练之前，应该首先寻找最优的参数c和γ。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/07/19/text-classification-in-action/">文本分类实践</a></h1>
     
     
@@ -126,11 +182,15 @@
 
 <p>如此一来，我们把文档用特征向量来表示了，接下来就是训练模型了。在上述过程的实现过程中，我没有遇到太大的问题，unix+python是很有利的文本处理工具，实现起来很快。我是用的svm工具是libsvm，使用也很简单，但是我确实在训练模型的时候遇到了一个问题。</p>
 
-<p>一般来讲，libsvm的使用流程是这样的：
-* svm-scale，对数据进行归一化处理，映射到[0,1]区间内
-* grid.py 寻找最优参数c和g
-* svm-train
-* svm-predict</p>
+<p>一般来讲，libsvm的使用流程是这样的：</p>
+
+<ul>
+<li>svm-scale，对数据进行归一化处理，映射到[0,1]区间内</li>
+<li>grid.py 寻找最优参数c和g</li>
+<li>svm-train</li>
+<li>svm-predict</li>
+</ul>
+
 
 <p>我第一次使用的时候，用信息增益选择特征，libsvm不太懂，也没去查太多的资料，略去了第二步，也就是我训练的时候没指定参数。这训练效果太差了，把所有的文档都分到了一类中。一开始我总怀疑特征提取的不好，于是换卡方校验，结果还是这样，之后开始怀疑我训练的方法不对，于是很快发现了问题。在指定c和g参数之后，训练结果非常好，对训练数据的准确率为100%，在测试集上的准确率为93.52%，比人家论文上的准确率还高，非常让人振奋。</p>
 
@@ -286,11 +346,15 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (1)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (1)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (1)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (2)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/07/20/understanding-kernel-function/">核函数理解</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/07/19/text-classification-in-action/">文本分类实践</a>
@@ -345,7 +409,7 @@
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/文本挖掘' style='font-size: 130.0%'>文本挖掘(1)</a> <a href='/blog/categories/机器学习' style='font-size: 130.0%'>机器学习(1)</a> <a href='/blog/categories/杂项' style='font-size: 160.0%'>杂项(2)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/文本挖掘' style='font-size: 130.0%'>文本挖掘(1)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(2)</a> <a href='/blog/categories/杂项' style='font-size: 160.0%'>杂项(2)</a> </span>
 </section>
 
   
