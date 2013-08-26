@@ -4,7 +4,7 @@
   <title><![CDATA[Xutianming Blog]]></title>
   <link href="http://xutianming.github.io/atom.xml" rel="self"/>
   <link href="http://xutianming.github.io/"/>
-  <updated>2013-08-19T14:31:47+08:00</updated>
+  <updated>2013-08-26T14:37:54+08:00</updated>
   <id>http://xutianming.github.io/</id>
   <author>
     <name><![CDATA[Xutianming]]></name>
@@ -12,6 +12,72 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[为控件增加鼠标悬浮提示]]></title>
+    <link href="http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/"/>
+    <updated>2013-08-26T14:21:00+08:00</updated>
+    <id>http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3</id>
+    <content type="html"><![CDATA[<p>上星期阅读了《Interactive Data Visualization for the Web》一书之后，便开始尝试使用D3js了。以前一直没怎么写过前端和界面，个人对于坐标位置布局什么的相当没感觉，总是乱乱的。所以这次写来，大部分也都是用的别人写好的现成的东西，在这个基础上做些改动。</p>
+
+<p>今天做的改动之一就是为标签Text增加鼠标悬浮事件，提示改概念的定义。</p>
+
+<p>效果图如下：</p>
+
+<p><img src="http://i.imgur.com/0E53nrC.jpg" alt="Imgur" /></p>
+
+<p>这段代码参考了StackOverflow上的这个<a href="http://stackoverflow.com/questions/10805184/d3-show-data-on-mouseover-of-circle">帖子</a></p>
+
+<pre><code>// Show defination of the current item
+function show_defination(d) {
+    d3.select(this)
+        .append("svg:title")
+        .text(function(d) {return d.def;})
+        .attr("x",function(d) {return d.x+10;})
+        .attr("y",function(d) {return d.y+10;})
+}
+</code></pre>
+
+<p>我添加的代码如上，绑定在text控件的mouseover时间上。<code>on("mouseover",show_defination);</code></p>
+
+<p>另外我还发现了一个很好的在线校验json的<a href="http://jsonlint.com/">网站</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[ACM中递归问题解决方法思考]]></title>
+    <link href="http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model/"/>
+    <updated>2013-08-20T21:47:00+08:00</updated>
+    <id>http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model</id>
+    <content type="html"><![CDATA[<p>最近在做ACM的练习题来练习编程的基本功，今天研究到了递归问题。就是通过寻找递推公式，来解决问题。</p>
+
+<p>在总结方法的过程中，发现，对于一些比较简单的题目，可以在纸上比较轻易的模拟过程的问题，可以通过观察第n项与前面的1-3项之间的关系，直接得到递推公式。</p>
+
+<p>比如：</p>
+
+<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1001&amp;ojid=0&amp;cid=1531&amp;hide=0">超级楼梯</a></p>
+
+<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1002&amp;ojid=0&amp;cid=1531&amp;hide=0">一只小蜜蜂&hellip;</a></p>
+
+<p>这些问题都比较简单直观，所以很容易思考直接获得递推公式。</p>
+
+<p>而其他的一些问题，可能就相对来说抽象一些，需要我们画图，找一下规律，这时候千万不要怕麻烦，画图可以很直观的帮助我们找到规律，也就是递推公式。</p>
+
+<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1004&amp;ojid=0&amp;cid=1531&amp;hide=0">骨牌铺方格</a></p>
+
+<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1009&amp;ojid=0&amp;cid=1531&amp;hide=0">Tiling_easy version</a></p>
+
+<p>比如上面这种铺砖的，画图之后，有目的的去观察，有n-1和n-2项如何去铺砖得第n项，就可以发现递推公式。这种一般从第三项之后，才会有规律。也就是找第四项和第三、第二项之间的关系。</p>
+
+<p>总而言之，这类问题考验思维能力要强于对编程能力的考验。思考的方法更为重要。我大体总结了一下，这类问题主要有两种思考的方式，一种是从前往后，一种是从后往前。</p>
+
+<p>从前往后，就是考察第一、第二项，这一般是递推公式的初始项，然后考察第三项、第四项、第五项，在计算这几项的时候，看能否提出一种可以推广的计算方法，这种方法，抽象来，就是递推公式。这种方法的优点是，比较直观，可以画图，容易理解，缺点是，有些问题没法解决。</p>
+
+<p>从后往前，就是直接考察第n项的得出，有几种可能来构造第n项，每种可能如何用第n-1项、第n-2项的值，来构造。这种方法的优点是通用性更高一些，只要脑筋转的过来，大部分问题都可以通过这种方法找出递推公式。缺点就是比较抽象，不怎么好想。</p>
+
+<p>写到这里，我觉得这种问题的解决，好像是HMM中的前向算法和后向算法，分别就是从前向后和从后向前，进行状态的转移。不过再仔细思考，这也只是形似而已，似乎在本质上，双方没有数学层面上的必然联系。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[对数据可视化的初步认识]]></title>

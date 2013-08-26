@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>由invocationTargetException引发的思考 - Xutianming Blog</title>
+  <title>ACM中递归问题解决方法思考 - Xutianming Blog</title>
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="最近接到的项目，终于过了第一轮，兴奋之余还是要静下心来好好研究代码。第二轮得分只有60分，意料之中，做的时候就发现有很多不会的了，当时及时记录下来，所以这次看代码也有针对性的多。 逻辑代码最大的问题还是出在异常处理上，有很多不合适的地方，不过经历过这次下次应该不会再犯了。测试依然疑问最多， &hellip;">
+  <meta name="description" content="最近在做ACM的练习题来练习编程的基本功，今天研究到了递归问题。就是通过寻找递推公式，来解决问题。 在总结方法的过程中，发现，对于一些比较简单的题目，可以在纸上比较轻易的模拟过程的问题，可以通过观察第n项与前面的1-3项之间的关系，直接得到递推公式。 比如： 超级楼梯 一只小蜜蜂&hellip; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://xutianming.github.io/blog/2013/07/11/invocation-target-exception">
+  <link rel="canonical" href="http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Xutianming Blog" type="application/atom+xml">
@@ -68,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">由invocationTargetException引发的思考</h1>
+      <h1 class="entry-title">ACM中递归问题解决方法思考</h1>
     
     
       <p class="meta">
@@ -84,7 +84,7 @@
   
 
 
-<time datetime="2013-07-11T16:28:00+08:00" pubdate data-updated="true">Jul 11<span>th</span>, 2013</time>
+<time datetime="2013-08-20T21:47:00+08:00" pubdate data-updated="true">Aug 20<span>th</span>, 2013</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -93,23 +93,33 @@
   </header>
 
 
-<div class="entry-content"><p>最近接到的项目，终于过了第一轮，兴奋之余还是要静下心来好好研究代码。第二轮得分只有60分，意料之中，做的时候就发现有很多不会的了，当时及时记录下来，所以这次看代码也有针对性的多。</p>
+<div class="entry-content"><p>最近在做ACM的练习题来练习编程的基本功，今天研究到了递归问题。就是通过寻找递推公式，来解决问题。</p>
 
-<p>逻辑代码最大的问题还是出在异常处理上，有很多不合适的地方，不过经历过这次下次应该不会再犯了。测试依然疑问最多，很多莫名的异常不知道如何抛出，归根到底还是Java的基础不牢，不过这也不是一天两天的事情，见的多了自然熟悉。</p>
+<p>在总结方法的过程中，发现，对于一些比较简单的题目，可以在纸上比较轻易的模拟过程的问题，可以通过观察第n项与前面的1-3项之间的关系，直接得到递推公式。</p>
 
-<p>今天看到一个很常见的异常&mdash;InvocationTargetException，顾名思义，在反射机制中，如果当前执行的方法所调用的方法抛出异常，会被包装成这个异常，</p>
+<p>比如：</p>
 
-<p>当然这在之前我是不知道的。因为在coding的时候，一写反射的语句，IDE会自动提示需要处理这个异常，于是乎很自然而然的就写上了catch（InvocationTargetException），不需要理由。可是当编写单元测试的时候问题就来了，你需要构造一套参数，让函数抛出这个异常以验证代码可以捕获这个异常。</p>
+<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1001&amp;ojid=0&amp;cid=1531&amp;hide=0">超级楼梯</a></p>
 
-<p>最一开始是从研究Winner的代码开始的，看到Winner写的对应的测试，很是摸不着头脑，不知道Winner的参数为何可以导致异常，上网查资料，除了API只外几乎没有任何资料，API中对于这个异常又描述甚少。手头的各种Java工具书这时候也派不上用场了。无计可施，只好请教学长。其实这个问题大家平时都遇到过，因为反射是TC上最常用到的技术之一，可能是因为太不显眼，所以大家之前都不约而同的无视它了。现在提出来，于是我们一起摸索。</p>
+<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1002&amp;ojid=0&amp;cid=1531&amp;hide=0">一只小蜜蜂&hellip;</a></p>
 
-<p>摸索的过程也是我学习的过程，很多思想我慢慢树立起来。构造异常测试，首先看配置文件，因为参数的不合法是导致异常的最常见原因。总之要充分利用项目文档所提供给我们的信息，这可以极大的提高开发的效率和质量。毕竟很多问题已经不需要我们去思考了，designer已经为我们考虑到，我们只需要照做。对于如此短的项目周期来说，这一点很重要。</p>
+<p>这些问题都比较简单直观，所以很容易思考直接获得递推公式。</p>
 
-<p>这个异常是反射机制定义的异常，自然在开发文档中找不到了。接下来我们还是走了小小的弯路，我们找来了JDK的源码&hellip;&hellip;各种复杂的关系和调用，最终崩溃。放弃&hellip;&hellip;不过我还是学了一小招。参考源码确实能解决很多问题，但是这在简单的类中比较实用。比如说String这样的类，里面的诸如substring ,spilt等方法可以给我们提供算法的灵感。</p>
+<p>而其他的一些问题，可能就相对来说抽象一些，需要我们画图，找一下规律，这时候千万不要怕麻烦，画图可以很直观的帮助我们找到规律，也就是递推公式。</p>
 
-<p>学习Java最直接的工具还是API文档了。我无意间查到了抛出这个异常的newInstance方法，下面明确写着，当新建对象的类构造方法在被调用时抛出异常，此异常将被抛出。问题解决了：测试者提供的给构造方法的参数有两个，而此类构造方法只接受一个参数，于是乎异常被抛出。</p>
+<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1004&amp;ojid=0&amp;cid=1531&amp;hide=0">骨牌铺方格</a></p>
 
-<p>最终的答案是简单的，但是要是在项目开发中意识到这个问题难度还是很大的，需要有对项目足够的理解再加上足够的开发经验才能做到。对项目整体功能的把握和对每个细节精确的理解，是我所发现的最大差距所在，也将是我近期努力的目标。毕竟所掌握的技术和各种编码技巧不是一个技术人员价值的最大体现。严谨的思维和对细节的把握才是技术人员身上的闪光点，这是无可替代的。</p>
+<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1009&amp;ojid=0&amp;cid=1531&amp;hide=0">Tiling_easy version</a></p>
+
+<p>比如上面这种铺砖的，画图之后，有目的的去观察，有n-1和n-2项如何去铺砖得第n项，就可以发现递推公式。这种一般从第三项之后，才会有规律。也就是找第四项和第三、第二项之间的关系。</p>
+
+<p>总而言之，这类问题考验思维能力要强于对编程能力的考验。思考的方法更为重要。我大体总结了一下，这类问题主要有两种思考的方式，一种是从前往后，一种是从后往前。</p>
+
+<p>从前往后，就是考察第一、第二项，这一般是递推公式的初始项，然后考察第三项、第四项、第五项，在计算这几项的时候，看能否提出一种可以推广的计算方法，这种方法，抽象来，就是递推公式。这种方法的优点是，比较直观，可以画图，容易理解，缺点是，有些问题没法解决。</p>
+
+<p>从后往前，就是直接考察第n项的得出，有几种可能来构造第n项，每种可能如何用第n-1项、第n-2项的值，来构造。这种方法的优点是通用性更高一些，只要脑筋转的过来，大部分问题都可以通过这种方法找出递推公式。缺点就是比较抽象，不怎么好想。</p>
+
+<p>写到这里，我觉得这种问题的解决，好像是HMM中的前向算法和后向算法，分别就是从前向后和从后向前，进行状态的转移。不过再仔细思考，这也只是形似而已，似乎在本质上，双方没有数学层面上的必然联系。</p>
 </div>
 
 
@@ -132,12 +142,12 @@
   
 
 
-<time datetime="2013-07-11T16:28:00+08:00" pubdate data-updated="true">Jul 11<span>th</span>, 2013</time>
+<time datetime="2013-08-20T21:47:00+08:00" pubdate data-updated="true">Aug 20<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/za-xiang/'>杂项</a>
+    <a class='category' href='/blog/categories/suan-fa-ji-chu/'>算法基础</a>
   
 </span>
 
@@ -146,7 +156,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/07/11/invocation-target-exception/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/07/11/invocation-target-exception/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model/" >Tweet</a>
   
   
   
@@ -155,10 +165,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/07/11/blog-migration-announcement-and-markdown-trial/" title="Previous Post: 博客迁移声明">&laquo; 博客迁移声明</a>
+        <a class="basic-alignment left" href="/blog/2013/08/19/my-general-view-on-data-visualization/" title="Previous Post: 对数据可视化的初步认识">&laquo; 对数据可视化的初步认识</a>
       
       
-        <a class="basic-alignment right" href="/blog/2013/07/19/text-classification-in-action/" title="Next Post: 文本分类实践">文本分类实践 &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/" title="Next Post: 为控件增加鼠标悬浮提示">为控件增加鼠标悬浮提示 &raquo;</a>
       
     </p>
   </footer>
@@ -261,8 +271,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://xutianming.github.io/blog/2013/07/11/invocation-target-exception/';
-        var disqus_url = 'http://xutianming.github.io/blog/2013/07/11/invocation-target-exception/';
+        var disqus_identifier = 'http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model/';
+        var disqus_url = 'http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model/';
         var disqus_script = 'embed.js';
       
     (function () {
