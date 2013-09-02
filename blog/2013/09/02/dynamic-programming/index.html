@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>ACM中递归问题解决方法思考 - Xutianming Blog</title>
+  <title>动态规划 - Xutianming Blog</title>
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="最近在做ACM的练习题来练习编程的基本功，今天研究到了递归问题。就是通过寻找递推公式，来解决问题。 在总结方法的过程中，发现，对于一些比较简单的题目，可以在纸上比较轻易的模拟过程的问题，可以通过观察第n项与前面的1-3项之间的关系，直接得到递推公式。 比如： 超级楼梯 一只小蜜蜂&hellip; &hellip;">
+  <meta name="description" content="当遇到复杂问题的时候，我们很自然的想要降低问题的复杂度和规模。在《算法导论》中，作者将动态规划和分治算法都当做降低问题规模，将复杂问题转化为子问题的方法。不同的是，分治算法划分出的子问题都是独立的，而动态规划中的子问题相互之间是非独立的，高层的子问题（离原问题比较近）往往依赖于低层子问题。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model">
+  <link rel="canonical" href="http://xutianming.github.io/blog/2013/09/02/dynamic-programming">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Xutianming Blog" type="application/atom+xml">
@@ -68,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">ACM中递归问题解决方法思考</h1>
+      <h1 class="entry-title">动态规划</h1>
     
     
       <p class="meta">
@@ -84,7 +84,7 @@
   
 
 
-<time datetime="2013-08-20T21:47:00+08:00" pubdate data-updated="true">Aug 20<span>th</span>, 2013</time>
+<time datetime="2013-09-02T19:53:00+08:00" pubdate data-updated="true">Sep 2<span>nd</span>, 2013</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -93,33 +93,35 @@
   </header>
 
 
-<div class="entry-content"><p>最近在做ACM的练习题来练习编程的基本功，今天研究到了递归问题。就是通过寻找递推公式，来解决问题。</p>
+<div class="entry-content"><p>当遇到复杂问题的时候，我们很自然的想要降低问题的复杂度和规模。在《算法导论》中，作者将动态规划和分治算法都当做降低问题规模，将复杂问题转化为子问题的方法。不同的是，分治算法划分出的子问题都是独立的，而动态规划中的子问题相互之间是非独立的，高层的子问题（离原问题比较近）往往依赖于低层子问题。所以假如不利用动态规划，自底向上计算这类问题的时候，会有大量重复的计算，从而使算法的效率低。</p>
 
-<p>在总结方法的过程中，发现，对于一些比较简单的题目，可以在纸上比较轻易的模拟过程的问题，可以通过观察第n项与前面的1-3项之间的关系，直接得到递推公式。</p>
+<p>那么，动态规划的本质就是建立一个表，存储子问题的结果，在计算高层问题的时候，直接利用表中的结果。这就是动态规划的基本思想。动态规划往往被用来计算最优化问题，利用的理论是子问题最优化理论，也就是一个最优化解的路径上的所有子问题，也都是当前最优化的。但是，这已经不是动态规划的核心了，我之前就在理解动态规划的时候，犯了这个错误。在试图利用动态规划去解决问题的时候，我往往纠结于去寻找这样的最优化子结构。其实有时候，这种最优化子结构并不好找甚至没有，但是也可以利用动态规划去解。动态规划的基本思想，还是很朴素的。</p>
 
-<p>比如：</p>
+<p>最近在TopCoder上读了一个黄名大牛写的<a href="http://www.topcoder.com/tc?d1=tutorials&amp;d2=dynProg&amp;module=Static">动态规划进阶手册</a>深受启发。文中指出，动态规划应该这么描述：动态规划算法往往建立在一个递归方程和这个方程的初始状态之上（很像那种找递推公式的问题）。每个子问题，都建立在之前发现并计算好的问题上。动态规划问题往往都有多项式级别的复杂度，因此比暴力搜索和回溯算法效率要高（这一点我还不是特别明白，文中有提出，多项式复杂度的问题都可以用动态规划来解决）。</p>
 
-<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1001&amp;ojid=0&amp;cid=1531&amp;hide=0">超级楼梯</a></p>
+<p>动态规划问题的解决过程是分为两步：定义问题的状态（或者说是子问题），发现如何又一个状态转移到下一个状态（也就是定义状态转移方程，是上文指出的“递归方程”），更准确的说，如何利用已有的子状态，计算下一个状态，因为有时候不是从i转移到i+1。</p>
 
-<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1002&amp;ojid=0&amp;cid=1531&amp;hide=0">一只小蜜蜂&hellip;</a></p>
+<p>举例说明：</p>
 
-<p>这些问题都比较简单直观，所以很容易思考直接获得递推公式。</p>
+<p>给定N个硬币，价值分别为（v1，v2，v3&hellip;vN），给定价值和S。求解价值和为S的硬币集合，使其包含的硬币个数最少，每种价值的硬币可以使用任意多个。</p>
 
-<p>而其他的一些问题，可能就相对来说抽象一些，需要我们画图，找一下规律，这时候千万不要怕麻烦，画图可以很直观的帮助我们找到规律，也就是递推公式。</p>
+<p>问题分析：</p>
 
-<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1004&amp;ojid=0&amp;cid=1531&amp;hide=0">骨牌铺方格</a></p>
+<p>在这个问题中我们要求解的结果是价值和S，那么定义“状态”为当前价值和为i（i&lt;S），对于所有的状态j（j>i），要利用i来求解，而对于状态j(j&lt;i)，要在计算状态i之前计算好。在实践中，我发现子状态往往是针对要求解的那个问题的。</p>
 
-<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1009&amp;ojid=0&amp;cid=1531&amp;hide=0">Tiling_easy version</a></p>
+<p>对于状态i，我们假设，所有的子状态j（j&lt;i）都已经计算出结果来了。那么i如何利用子结果来计算。对于所有价值小于i 的硬币（循环遍历）j，使用此硬币，使价值和变为i-j，由于i-j&lt;i，那么此子问题，我们应该已经计算好了，假设硬币数为m，则i状态的结果应为m+1。遍历过程中，我们把最小的那个结果存给状态i。</p>
 
-<p>比如上面这种铺砖的，画图之后，有目的的去观察，有n-1和n-2项如何去铺砖得第n项，就可以发现递推公式。这种一般从第三项之后，才会有规律。也就是找第四项和第三、第二项之间的关系。</p>
+<p>基于这种想法，我们需要从状态0开始，到状态s逐一计算。也就是动态规划中所谓的，从顶向下思考，从底向上计算。这里有个思考陷阱，千万不要想如何从i计算i+1，而是如何利用已有的所有子状态j(j&lt;=i)计算i+1。就写这篇博客的过程，我因为想当然认为这样，差点进入死胡同。</p>
 
-<p>总而言之，这类问题考验思维能力要强于对编程能力的考验。思考的方法更为重要。我大体总结了一下，这类问题主要有两种思考的方式，一种是从前往后，一种是从后往前。</p>
+<p>这是动态规划最基本的思考过程。</p>
 
-<p>从前往后，就是考察第一、第二项，这一般是递推公式的初始项，然后考察第三项、第四项、第五项，在计算这几项的时候，看能否提出一种可以推广的计算方法，这种方法，抽象来，就是递推公式。这种方法的优点是，比较直观，可以画图，容易理解，缺点是，有些问题没法解决。</p>
+<p>一般情况下，我们要遍历所有的比i低的状态j，但是并不是所有的j都能转换到i。在这个硬币问题中取决于，是否有个硬币k，使得S[j]+vk=S[i]。这就是状态转移的条件，所以在实践中，我们一般要判断状态j能否转移到条件i，在上例中没有判断的原因是，我们根据硬币价值遍历，遍历到的都肯定满足转移的条件。其他问题，比如无向图中，状态节点j能否转移到节点i取决于i和j之间是否有一条边。这就要判断了，当然假如存储图结构的时候，存储了所有指向节点i的入节点j，就可以遍历这个节点集了，但是对于自底向上的动态规划解决方案中，很少出现。</p>
 
-<p>从后往前，就是直接考察第n项的得出，有几种可能来构造第n项，每种可能如何用第n-1项、第n-2项的值，来构造。这种方法的优点是通用性更高一些，只要脑筋转的过来，大部分问题都可以通过这种方法找出递推公式。缺点就是比较抽象，不怎么好想。</p>
+<p>更复杂一点，状态转移不是一维的，变成二维甚至多维（目前只见过二维）。这种问题，通过比较好的定义子状态，也很好理解。</p>
 
-<p>写到这里，我觉得这种问题的解决，好像是HMM中的前向算法和后向算法，分别就是从前向后和从后向前，进行状态的转移。不过再仔细思考，这也只是形似而已，似乎在本质上，双方没有数学层面上的必然联系。</p>
+<p>还有其他的情况下，限制条件所需的信息和我们所求的结果并不一致。比如赋权图中，从节点j到节点i的最短路径，在权值和小于s的前提下。我们最终关心的是路径长度，但是状态转移的限制条件是权值和，这时候需要一个二维数组来存储。</p>
+
+<p>更复杂的情况，乍一看并不是动态规划问题，但是和我们以前遇到过的动态规划问题很像，这时候，我们需要一些转变，把问题转换成以前的问题的升级版去求解。这是最难的，菜鸟级别的我暂时还没什么感受。留在日后补充吧。</p>
 </div>
 
 
@@ -142,7 +144,7 @@
   
 
 
-<time datetime="2013-08-20T21:47:00+08:00" pubdate data-updated="true">Aug 20<span>th</span>, 2013</time>
+<time datetime="2013-09-02T19:53:00+08:00" pubdate data-updated="true">Sep 2<span>nd</span>, 2013</time>
       
 
 <span class="categories">
@@ -156,7 +158,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/09/02/dynamic-programming/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/09/02/dynamic-programming/" >Tweet</a>
   
   
   
@@ -165,10 +167,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/08/19/my-general-view-on-data-visualization/" title="Previous Post: 对数据可视化的初步认识">&laquo; 对数据可视化的初步认识</a>
+        <a class="basic-alignment left" href="/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/" title="Previous Post: 为控件增加鼠标悬浮提示">&laquo; 为控件增加鼠标悬浮提示</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/" title="Next Post: 为控件增加鼠标悬浮提示">为控件增加鼠标悬浮提示 &raquo;</a>
       
     </p>
   </footer>
@@ -271,8 +271,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model/';
-        var disqus_url = 'http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model/';
+        var disqus_identifier = 'http://xutianming.github.io/blog/2013/09/02/dynamic-programming/';
+        var disqus_url = 'http://xutianming.github.io/blog/2013/09/02/dynamic-programming/';
         var disqus_script = 'embed.js';
       
     (function () {
