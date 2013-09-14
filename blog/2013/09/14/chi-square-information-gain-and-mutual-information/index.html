@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>核函数理解 - Xutianming Blog</title>
+  <title>卡方校验、信息增益和互信息 - Xutianming Blog</title>
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="SVM相关的理论知识看过几遍，但是感觉一直都不是理解的很透彻，特别是核函数的概念。今天又查阅了大家写的学习笔记等资料，结合自己的实践经验，感觉对核函数的理解更进一步了，所以记录在这里。 一句话说明核函数的意义和作用：为使非线性可分问题转化为线性可分，将特征向量映射到高维，映射函数所满足的性质。 &hellip;">
+  <meta name="description" content="从一开始做文本分类到现在做的项目，一直在不断的学习新的知识，练习已经掌握的工具，也越来越深刻的认识到，“你所掌握的机器学习方法，并不是死板的一成不变的算法，而是一个一个的小工具，是解决问题的思路”。 这篇博客将对比三个在我进行文本挖掘相关工作的时候经常用到的小工具，以及我对他们的认识， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://xutianming.github.io/blog/2013/07/20/understanding-kernel-function">
+  <link rel="canonical" href="http://xutianming.github.io/blog/2013/09/14/chi-square-information-gain-and-mutual-information">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Xutianming Blog" type="application/atom+xml">
@@ -68,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">核函数理解</h1>
+      <h1 class="entry-title">卡方校验、信息增益和互信息</h1>
     
     
       <p class="meta">
@@ -84,7 +84,7 @@
   
 
 
-<time datetime="2013-07-20T11:13:00+08:00" pubdate data-updated="true">Jul 20<span>th</span>, 2013</time>
+<time datetime="2013-09-14T20:51:00+08:00" pubdate data-updated="true">Sep 14<span>th</span>, 2013</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -93,25 +93,29 @@
   </header>
 
 
-<div class="entry-content"><p>SVM相关的理论知识看过几遍，但是感觉一直都不是理解的很透彻，特别是核函数的概念。今天又查阅了大家写的学习笔记等资料，结合自己的实践经验，感觉对核函数的理解更进一步了，所以记录在这里。</p>
+<div class="entry-content"><p>从一开始做文本分类到现在做的项目，一直在不断的学习新的知识，练习已经掌握的工具，也越来越深刻的认识到，“你所掌握的机器学习方法，并不是死板的一成不变的算法，而是一个一个的小工具，是解决问题的思路”。</p>
 
-<p>一句话说明核函数的意义和作用：为使非线性可分问题转化为线性可分，将特征向量映射到高维，映射函数所满足的性质。</p>
+<p>这篇博客将对比三个在我进行文本挖掘相关工作的时候经常用到的小工具，以及我对他们的认识，仅限个人的粗浅观点，也是我当前的认识，不见得正确。</p>
 
-<p>具体说来，svm可以直接解决线性可分的分类问题，对于近似线性可分的问题，通过增加松弛变量，也可以实现分类。那么对于非线性可分的问题呢，比较直观的想法是映射，也就是通过把特征映射到高维，使非线性可分问题转化为线性可分的问题。但是就一般的实际问题来讲，寻找这个映射很困难，而且很难有可推广的方法。于是提出了kernel trick。可以绕过寻找这个映射函数。</p>
+<p><a href="http://zh.wikipedia.org/wiki/%E7%9A%AE%E7%88%BE%E6%A3%AE%E5%8D%A1%E6%96%B9%E6%AA%A2%E5%AE%9A">卡方校验</a></p>
 
-<p>在理论公式的推导中，可以算出参数w的表示方法：</p>
+<p>首先理解卡方校验的概念，除了维基百科，我总会看<a href="http://www.blogjava.net/zhenandaci/archive/2008/08/31/225966.html">这篇博客</a>。简单来讲，卡方校验是用来判别两个事件是否相关的方法，因此在特征提取、关键词提取中都有很多的应用。基本思路是，首先假设A、B不相关，然后根据A和B的联合概率分布，计算卡方值，公式在定义中都有给出，卡方值越大，越倾向于推翻原假设，也就是A、B越相关。在计算卡方值的过程中，最关键的问题是找到联合概率分布。那么我们应该如何理解卡方值呢？卡方值的含义其实是这样的，我们首先假设A、B不相关，也就是AB相互独立，那么我们可以为联合概率分布中的AB同时成立的事件计算期望值，根据定义公式显示，卡方值是这个期望值和实际值之间的差的平方除以期望值的和（定义和方差很像！），衡量了这两个量拟合的程度。那么，卡方值越大，代表期望值和实际值之间的差越大，也就是我们计算期望值所依赖的假设，是不成立的！</p>
 
-<p><img src="http://i.imgur.com/KqPVcLl.png?1" alt="Imgur" /></p>
+<p>当我们想用卡方检验的方法，去判断两个事件是否相关的时候，理解问题的过程，就是建立事件A、B联合概率分布的过程，找到这个概率分布，就可以计算卡方值。举例说明的话，在文本分类的特征提取这一步，事件A是特征词w是否存在在本篇文档中，事件B是本篇文档是否属于类c。首先假设“w不是类c的特征词”，那么词w在属于类c的所有文档中出现的概率，应当与w在全部文档中出现的概率相同，我们依据这一假设，可以算出w出现在c类的文档数的期望，用期望值和实际值的差的平方除以作为卡方值。</p>
 
-<p>于是分类超平面的函数也可以写成：</p>
+<p><a href="http://zh.wikipedia.org/wiki/%E7%9B%B8%E5%AF%B9%E7%86%B5">信息增益</a></p>
 
-<p><img src="http://i.imgur.com/UVGLjMS.png?3" alt="Imgur" /></p>
+<p>也经常作为特征提取的方法，也用来衡量两个事件的相关性，但是是从信息论的角度来的。信息论用熵来衡量信息量。信息增益，简单理解就是在已知条件B的情况下，事件A的信息量的改变程度，就是熵的改变程度。同样有<a href="http://www.blogjava.net/zhenandaci/archive/2009/03/24/261701.html">一篇博客</a>讲得很透彻。从上面的描述可以看出，计算信息增益的关键是计算熵和条件熵。所以说，信息增益对应的概率分布，是普通的概率分布和一个条件概率分布。那么我们应该如何具体理解信息增益呢？我们首先计算事件A的信息熵，然后考虑事件B，计算在有事件B的情况下的条件熵，两者之差，就是信息熵的改变，改变越大，说明事件B对于事件A的相关性越大。由于涉及到信息论，所以信息量改变这一点，就变的略显抽象。</p>
 
-<p>这个公式中只有&lt;x(i),x>的内积形式，也就是说，我们映射之后，需要计算&lt;Fi(xi),Fi(x)>的内积。而我们定义的核函数，就是这一内积的形式。</p>
+<p>仿照上文中对卡方校验的介绍。利用信息增益解决问题的关键，在于找到这个条件概率分布，以计算条件熵。同样举文本分类中特征提取这个例子。事件A是指文档属于类ci，事件B是词w是否出现在文档中。根据P(Ci|w)和P(Ci|^w)这两个条件概率分布，可以计算条件熵H(C|T)。</p>
 
-<p><img src="http://i.imgur.com/lLicBOp.png?1" alt="Imgur" /></p>
+<p>不过仔细读过信息增益的概念，发现我们上面介绍的和KL散度差别挺大的，目前我也不能理解这两种概念是否本质上相同，但是在分类和挖掘领域，大家一般是像我说的那样去理解信息增益的。</p>
 
-<p>如此一来，我们就可以用核函数直接替换内积，相当于，我们把原始的特征向量，映射到了高维，并且避免了寻找映射函数。而libsvm中推荐使用的RBF核函数，就是一个有着良好特性的核函数。可以将样本映射到一个更高维的空间，可以处理非线性的分类问题。而其关键的参数c和g分别为惩罚因子和核函数的参数。（RBF 核K(x, y) = exp(－γ || x －y ||的平方),γ > 0，g为gamma，就是r）。我们在使用libsvm训练之前，应该首先寻找最优的参数c和γ。</p>
+<p><a href="http://zh.wikipedia.org/wiki/%E4%BA%92%E4%BF%A1%E6%81%AF">互信息</a></p>
+
+<p>在互信息定义的多条公式中，我一般使用第三个，就是X，Y熵之和减去联合熵。根据联合熵，就可以发现，决定互信息的，也是一个联合概率分布。</p>
+
+<p>比较形象的理解互信息的公式方法是，认为事件X和事件Y相关，可以让总信息熵减少多少，差别越大，X和Y越相关。计算互信息的关键，是计算联合熵，因此在用互信息解决问题的适合，找到这个联合概率分布，是核心。不要试图去寻找其他的概率分布，实践表明，互信息的联合概率分布与卡方检验的非常相似，都是x是否怎样，y是否怎样。同样以文本分类为例，X为文档是否属于类c，Y事件为文档是否包含w，然后利用这个概率分布去计算联合熵。这么一看，和卡方检验几乎完全相同！只是利用了不同的理论基础。</p>
 </div>
 
 
@@ -134,12 +138,12 @@
   
 
 
-<time datetime="2013-07-20T11:13:00+08:00" pubdate data-updated="true">Jul 20<span>th</span>, 2013</time>
+<time datetime="2013-09-14T20:51:00+08:00" pubdate data-updated="true">Sep 14<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/ji-qi-xue-xi/'>机器学习</a>
+    <a class='category' href='/blog/categories/wen-ben-wa-jue/'>文本挖掘</a>, <a class='category' href='/blog/categories/ji-qi-xue-xi/'>机器学习</a>
   
 </span>
 
@@ -148,7 +152,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/07/20/understanding-kernel-function/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/07/20/understanding-kernel-function/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/09/14/chi-square-information-gain-and-mutual-information/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/09/14/chi-square-information-gain-and-mutual-information/" >Tweet</a>
   
   
   
@@ -157,10 +161,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/07/19/text-classification-in-action/" title="Previous Post: 文本分类实践">&laquo; 文本分类实践</a>
+        <a class="basic-alignment left" href="/blog/2013/09/02/dynamic-programming/" title="Previous Post: 动态规划">&laquo; 动态规划</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/07/24/bye-my-childhood/" title="Next Post: 姥爷的老房子，我的童年">姥爷的老房子，我的童年 &raquo;</a>
       
     </p>
   </footer>
@@ -263,8 +265,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://xutianming.github.io/blog/2013/07/20/understanding-kernel-function/';
-        var disqus_url = 'http://xutianming.github.io/blog/2013/07/20/understanding-kernel-function/';
+        var disqus_identifier = 'http://xutianming.github.io/blog/2013/09/14/chi-square-information-gain-and-mutual-information/';
+        var disqus_url = 'http://xutianming.github.io/blog/2013/09/14/chi-square-information-gain-and-mutual-information/';
         var disqus_script = 'embed.js';
       
     (function () {
