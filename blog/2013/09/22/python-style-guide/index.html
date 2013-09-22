@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>为控件增加鼠标悬浮提示 - Xutianming Blog</title>
+  <title>Python Style Guide - Xutianming Blog</title>
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="上星期阅读了《Interactive Data Visualization for the Web》一书之后，便开始尝试使用D3js了。以前一直没怎么写过前端和界面，个人对于坐标位置布局什么的相当没感觉，总是乱乱的。所以这次写来，大部分也都是用的别人写好的现成的东西，在这个基础上做些改动。 &hellip;">
+  <meta name="description" content="写Python一段时间了，由于从初学到现在，一直还在熟悉语法和各种数据结构，以事先功能为主，自觉代码写的非常丑陋，现在也写了不少Python代码了，是时候挑战下习惯，遵循合适的代码风格，写简单易读的代码，Be Pythonic!! 本文主要参考了《Google Python Style Guide &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3">
+  <link rel="canonical" href="http://xutianming.github.io/blog/2013/09/22/python-style-guide">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Xutianming Blog" type="application/atom+xml">
@@ -68,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">为控件增加鼠标悬浮提示</h1>
+      <h1 class="entry-title">Python Style Guide</h1>
     
     
       <p class="meta">
@@ -84,7 +84,7 @@
   
 
 
-<time datetime="2013-08-26T14:21:00+08:00" pubdate data-updated="true">Aug 26<span>th</span>, 2013</time>
+<time datetime="2013-09-22T14:01:00+08:00" pubdate data-updated="true">Sep 22<span>nd</span>, 2013</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -93,29 +93,47 @@
   </header>
 
 
-<div class="entry-content"><p>上星期阅读了《Interactive Data Visualization for the Web》一书之后，便开始尝试使用D3js了。以前一直没怎么写过前端和界面，个人对于坐标位置布局什么的相当没感觉，总是乱乱的。所以这次写来，大部分也都是用的别人写好的现成的东西，在这个基础上做些改动。</p>
+<div class="entry-content"><p>写Python一段时间了，由于从初学到现在，一直还在熟悉语法和各种数据结构，以事先功能为主，自觉代码写的非常丑陋，现在也写了不少Python代码了，是时候挑战下习惯，遵循合适的代码风格，写简单易读的代码，Be Pythonic!!</p>
 
-<p>今天做的改动之一就是为标签Text增加鼠标悬浮事件，提示改概念的定义。</p>
+<p>本文主要参考了《<a href="http://google-styleguide.googlecode.com/svn/trunk/pyguide.html">Google Python Style Guide</a>》、《<a href="http://programmers.stackexchange.com/questions/119913/how-can-i-learn-to-effectively-write-pythonic-code">How can I learn to effectively write Pythonic code</a>》、《<a href="http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html">Code Like a Pythonista: Idiomatic Python</a>》三篇文章，摘取了其中我现在可能需要遵循的，因为有些做比较大的系统的项目才用到的，暂时就没写。我主要以写小算法和小工具为主。</p>
 
-<p>效果图如下：</p>
+<p>一、编码风格：</p>
 
-<p><img src="http://i.imgur.com/0E53nrC.jpg" alt="Imgur" /></p>
+<p>1、不要使用分号，也不要利用分号把两个命令放在一行</p>
 
-<p>这段代码参考了StackOverflow上的这个<a href="http://stackoverflow.com/questions/10805184/d3-show-data-on-mouseover-of-circle">帖子</a></p>
+<p>2、每行代码不超过80（特殊情况下，尽量不要把链接分开两行放）</p>
 
-<pre><code>// Show defination of the current item
-function show_defination(d) {
-    d3.select(this)
-        .append("svg:title")
-        .text(function(d) {return d.def;})
-        .attr("x",function(d) {return d.x+10;})
-        .attr("y",function(d) {return d.y+10;})
-}
+<p>3、少用括号，条件语句和return语句不要用括号（特殊情况下，利用括号来进行断行可以）</p>
+
+<p>4、缩进用四空格（一般在文本编辑器里设置tab转四空格）</p>
+
+<p>5、空格使用。语法符号之后用空格，但是括号、花括号、方括号之后不要用。逗号冒号之后有个空格，但是之前不要有。赋值号前后有空格，但是在使用默认参数的时候，不要加。</p>
+
+<p>6、一系列的赋值或者相同的操作。没必要用空格来使赋值号对齐。</p>
+
+<p>7、字符串的使用。尽量使用string format和&#8217;%&lsquo;而不是&rsquo;+&lsquo;。在循环中构造字符串的时候，不要使用&rsquo;+&lsquo;和&rsquo;+=&lsquo;，而是把所有的字符串先存在一个list里，然后在循环结束之后，用join函数。（这一点需要格外注意，具体原因原文有）</p>
+
+<p>8、多行string尽量不要用三个连续的引号，因为会破坏整体的缩进。使用join函数拼接。</p>
+
+<p>9、file和socket使用完毕要显式关闭</p>
+
+<p>10、临时的实现临时插入的代码，使用TODO注释</p>
+
+<p>11、import的组织。每行一个，不要一次import多个。按照标准库、第三方库、程序特有的，这一顺序进行引用，统一级别按照字母顺序排序。</p>
+
+<p>12、命名规范。module_name, package_name, ClassName, method_name, ExceptionName, function_name, GLOBAL_CONSTANT_NAME, global_var_name, instance_var_name, function_parameter_name, local_var_name。大部分使用了小写和下划线。</p>
+
+<p>13、所有的脚本都应该是可import的，并且脚本被import之后，不能对当前脚本的功能有所影响。所以，脚本都应该有主函数！</p>
+
+<pre><code>def main():
+    …
+if __name__ == '__main__':
+    main()
 </code></pre>
 
-<p>我添加的代码如上，绑定在text控件的mouseover时间上。<code>on("mouseover",show_defination);</code></p>
+<p>不然的话，主程序的逻辑，会在被import的时候被执行。</p>
 
-<p>另外我还发现了一个很好的在线校验json的<a href="http://jsonlint.com/">网站</a></p>
+<p>14、注释。使用正确的注释方法。见原文。</p>
 </div>
 
 
@@ -138,12 +156,12 @@ function show_defination(d) {
   
 
 
-<time datetime="2013-08-26T14:21:00+08:00" pubdate data-updated="true">Aug 26<span>th</span>, 2013</time>
+<time datetime="2013-09-22T14:01:00+08:00" pubdate data-updated="true">Sep 22<span>nd</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/codesegment/'>CodeSegment</a>, <a class='category' href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化</a>
+    <a class='category' href='/blog/categories/bian-cheng-yu-yan/'>编程语言</a>
   
 </span>
 
@@ -152,7 +170,7 @@ function show_defination(d) {
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/09/22/python-style-guide/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/09/22/python-style-guide/" >Tweet</a>
   
   
   
@@ -161,10 +179,8 @@ function show_defination(d) {
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/08/20/recursion-problem-and-hmm-model/" title="Previous Post: ACM中递归问题解决方法思考">&laquo; ACM中递归问题解决方法思考</a>
+        <a class="basic-alignment left" href="/blog/2013/09/22/preprocessing/" title="Previous Post: 打表与预处理">&laquo; 打表与预处理</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/09/02/dynamic-programming/" title="Next Post: 动态规划">动态规划 &raquo;</a>
       
     </p>
   </footer>
@@ -267,8 +283,8 @@ function show_defination(d) {
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/';
-        var disqus_url = 'http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/';
+        var disqus_identifier = 'http://xutianming.github.io/blog/2013/09/22/python-style-guide/';
+        var disqus_url = 'http://xutianming.github.io/blog/2013/09/22/python-style-guide/';
         var disqus_script = 'embed.js';
       
     (function () {
