@@ -4,7 +4,7 @@
   <title><![CDATA[Xutianming Blog]]></title>
   <link href="http://xutianming.github.io/atom.xml" rel="self"/>
   <link href="http://xutianming.github.io/"/>
-  <updated>2013-09-14T21:56:57+08:00</updated>
+  <updated>2013-09-22T13:45:35+08:00</updated>
   <id>http://xutianming.github.io/</id>
   <author>
     <name><![CDATA[Xutianming]]></name>
@@ -12,6 +12,21 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[打表与预处理]]></title>
+    <link href="http://xutianming.github.io/blog/2013/09/22/preprocessing/"/>
+    <updated>2013-09-22T13:31:00+08:00</updated>
+    <id>http://xutianming.github.io/blog/2013/09/22/preprocessing</id>
+    <content type="html"><![CDATA[<p>在ACM编程中，俗称打表，学名预处理。是我最近学习到的一个编程技巧。思想很简单自然，就是当有多组测试数据，但是每组测试数据的计算过程都是一模一样的。这时候，为了提高效率，节省计算资源，就会使用打表。</p>
+
+<p>举例说明，计算斐波那契数列，可能要求输出第30-100项。算法中，我们会自底向上计算，也就是从第1项一直计算到第n项。每计算一项，都是重复这个过程。假如不对算法进行优化的话，我们计算第30项，要从第1项计算过来，计算第100项的时候，还要再从第一项计算一遍，这种情况下，就浪费计算资源了！</p>
+
+<p>对于这种问题的优化思路，就是事先计算好所有可能需要输出的项，比如题目限制n&lt;=10000，那就把前10000项的斐波那契数列都计算好，存在数组里，然后根据测试用例的要求，输出对应的项就好了。</p>
+
+<p>这种计算一次使用多次的思想，与动态规划非常相似。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[卡方校验、信息增益和互信息]]></title>
