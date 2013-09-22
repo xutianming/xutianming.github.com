@@ -63,7 +63,7 @@ default_asides: [custom/asides/category_list.html,asides/recent_posts.html, asid
 # ----------------------- #
 
 # Github repositories
-github_user: tmxu
+github_user: xutianming
 github_repo_count: 0
 github_show_profile_link: true
 github_skip_forks: true
