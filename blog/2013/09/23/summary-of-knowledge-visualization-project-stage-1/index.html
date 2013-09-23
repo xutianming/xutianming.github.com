@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>ACM中递归问题解决方法思考 - Xutianming Blog</title>
+  <title>知识可视化项目第一阶段小结 - Xutianming Blog</title>
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="最近在做ACM的练习题来练习编程的基本功，今天研究到了递归问题。就是通过寻找递推公式，来解决问题。 在总结方法的过程中，发现，对于一些比较简单的题目，可以在纸上比较轻易的模拟过程的问题，可以通过观察第n项与前面的1-3项之间的关系，直接得到递推公式。 比如： 超级楼梯 一只小蜜蜂&hellip; &hellip;">
+  <meta name="description" content="距离开始做数据可视化项目，已经过去了将近一个月的时间，目前项目的进展暂时告一段落，技术探索的工作基本完成，是个时候小结一下了。 目前项目的思路是这样的，以维基百科为数据源，将维基百科上的知识（目前以机器学习为例）用可视化的方式展现，提高学习和探索的效率。 具体来说，第一步。编写网页爬虫， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model">
+  <link rel="canonical" href="http://xutianming.github.io/blog/2013/09/23/summary-of-knowledge-visualization-project-stage-1">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Xutianming Blog" type="application/atom+xml">
@@ -68,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">ACM中递归问题解决方法思考</h1>
+      <h1 class="entry-title">知识可视化项目第一阶段小结</h1>
     
     
       <p class="meta">
@@ -84,7 +84,7 @@
   
 
 
-<time datetime="2013-08-20T21:47:00+08:00" pubdate data-updated="true">Aug 20<span>th</span>, 2013</time>
+<time datetime="2013-09-23T14:44:00+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2013</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -93,33 +93,21 @@
   </header>
 
 
-<div class="entry-content"><p>最近在做ACM的练习题来练习编程的基本功，今天研究到了递归问题。就是通过寻找递推公式，来解决问题。</p>
+<div class="entry-content"><p>距离开始做数据可视化项目，已经过去了将近一个月的时间，目前项目的进展暂时告一段落，技术探索的工作基本完成，是个时候小结一下了。</p>
 
-<p>在总结方法的过程中，发现，对于一些比较简单的题目，可以在纸上比较轻易的模拟过程的问题，可以通过观察第n项与前面的1-3项之间的关系，直接得到递推公式。</p>
+<p>目前项目的思路是这样的，以维基百科为数据源，将维基百科上的知识（目前以机器学习为例）用可视化的方式展现，提高学习和探索的效率。</p>
 
-<p>比如：</p>
+<p>具体来说，第一步。编写网页爬虫，从维基百科上下载数据，并且存储成结构化的数据（目前采用XML），存储的内容包括分类、关键词定义、页面关键词、参考文献。其中，关键词的定义，我们认为是维基百科词条页面的第一段，实际效果还不错，第一段文字往往能很好的直接阐释关键字的含义。页面关键词，就是那些本页面中比较重要的词，要想很好的了解本页面的内容，这些关键词对应的内容是非常重要的参考资料，在实现中，我们以页面内容中超链接的锚文字为基础，筛选那些链接指向的页面也包含本页关键字的链接锚文字，这一点是受到PageRank的思想所启发的；就效果来看，关键字筛选效果良好，但是这个条件明显太强了，在两个条件的限制下，大部分页面都只有7个以下的关键字，这样使得可视化的意义不大了，因为内容本来不多的情况下，单纯的文本就很容易理解的。参考文献，就是单纯是指维基百科词条页面中的参考文献，在目前的实现中，这些数据并没有加以利用。至于这些内容是如何从Web页面中提取的，主要靠对页面结构的分析，编写在网页爬虫的逻辑中。</p>
 
-<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1001&amp;ojid=0&amp;cid=1531&amp;hide=0">超级楼梯</a></p>
+<p>第二步，是文本挖掘相关。针对上面的页面关键词，我们想要给每个页面关键词，根据相关度进行打分，然后根据这个相关度打分，进行进一步的可视化，比如比较重要的关键词Size比较大什么的。具体研究，使用了NLP中称为关键字提取（Keyword Extraction）的技术，通过阅读相关论文，确定了卡方相关性检验和仿PageRank的TextRank算法这两种技术方案。二选其一的话，我们选择了卡方检验，因为TextRank对我们来说有一些致命的缺点，比如计算量大、基于词在滑动窗口中的同时出现等等。相对来说，卡方检验对我们来说，要现实的多。</p>
 
-<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1002&amp;ojid=0&amp;cid=1531&amp;hide=0">一只小蜜蜂&hellip;</a></p>
+<p>在我们参考的论文中，作者针对单篇论文，对关键字进行提取，打分自然就是卡方值。对语料数量的要求都不是特别高，但是对我们来说，我们现有的语料还是太少了，维基百科一般的词条页面中内容很少，用这些来进行关键词提取的话，估计效果甚微。于是我们决定扩充语料，经过研究，我们决定利用机器学习方面的会议(NIPS)及其提供的搜索引擎。因为项目做到这里我们已经决定先就一个词条，进行挖掘，实验下看下效果，所以就选了Machine_learning这个词条。扩充语料的过程还是用爬虫来完成的，模拟执行搜索引擎搜索，爬10篇论文下来作为语料。期间需要把pdf格式的转化成文本。经过一些折磨好歹完成语料的准备之后，开始进行关键词提取了，具体过程，一开始，我们想就第一步率先选出的关键字进行打分，算卡方值。但是语料准备好之后发现，我们选出的那些关键字，在这10篇论文中出现很少。究其原因，主要是我们扩充语料的思路有问题，试想维基百科中的词条，应该是比较宽泛的介绍性文字，而论文多是针对领域中某个小的问题的。从维基百科中挖掘出的关键词，很难应用到论文的语料中来。所以只能再次委曲求全，放弃对维基百科的关键字进行打分，改为直接从论文语料中进行关键词提取。</p>
 
-<p>这些问题都比较简单直观，所以很容易思考直接获得递推公式。</p>
+<p>接下来的过程就是按照论文中的方法一步一步来了，涉及到词干提取，词组提取，词组聚类，计算卡方值等等。也顺利提取出了关键字，效果还不错。这么一来数据挖掘和准备的工作基本上就完成了。</p>
 
-<p>而其他的一些问题，可能就相对来说抽象一些，需要我们画图，找一下规律，这时候千万不要怕麻烦，画图可以很直观的帮助我们找到规律，也就是递推公式。</p>
+<p>第三步，可视化。可视化框架选择了D3js。用树状来表现分类，节点作为词条，点击词条，可视化展示此词条对应的关键词，使用了BubbleChart，主要涉及了D3js相关的javascript开发。</p>
 
-<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1004&amp;ojid=0&amp;cid=1531&amp;hide=0">骨牌铺方格</a></p>
-
-<p><a href="http://acm.hdu.edu.cn/webcontest/contest_showproblem.php?pid=1009&amp;ojid=0&amp;cid=1531&amp;hide=0">Tiling_easy version</a></p>
-
-<p>比如上面这种铺砖的，画图之后，有目的的去观察，有n-1和n-2项如何去铺砖得第n项，就可以发现递推公式。这种一般从第三项之后，才会有规律。也就是找第四项和第三、第二项之间的关系。</p>
-
-<p>总而言之，这类问题考验思维能力要强于对编程能力的考验。思考的方法更为重要。我大体总结了一下，这类问题主要有两种思考的方式，一种是从前往后，一种是从后往前。</p>
-
-<p>从前往后，就是考察第一、第二项，这一般是递推公式的初始项，然后考察第三项、第四项、第五项，在计算这几项的时候，看能否提出一种可以推广的计算方法，这种方法，抽象来，就是递推公式。这种方法的优点是，比较直观，可以画图，容易理解，缺点是，有些问题没法解决。</p>
-
-<p>从后往前，就是直接考察第n项的得出，有几种可能来构造第n项，每种可能如何用第n-1项、第n-2项的值，来构造。这种方法的优点是通用性更高一些，只要脑筋转的过来，大部分问题都可以通过这种方法找出递推公式。缺点就是比较抽象，不怎么好想。</p>
-
-<p>写到这里，我觉得这种问题的解决，好像是HMM中的前向算法和后向算法，分别就是从前向后和从后向前，进行状态的转移。不过再仔细思考，这也只是形似而已，似乎在本质上，双方没有数学层面上的必然联系。</p>
+<p>截止今天，以上的工作就是第一阶段做的事情。总的来说，没有成功的基于维基百科的数据进行挖掘，但是也探索了一条可行的路线，只是这条路线看样子扩展性并不好。于是，近几天忙于寻找一些更好的方式，不论是从数据源还是从挖掘的效果上。最近发现了一个专业的维基百科挖掘工具，(WikipediaMiner)[<a href="http://wikipedia-miner.cms.waikato.ac.nz/index.html">http://wikipedia-miner.cms.waikato.ac.nz/index.html</a>]和weka出自同一所大学，<a href="http://sepans.com/wikistalker/">效果</a>非常好。所以下一步，决定针对这个进行一些研究。先研究其原理，对比下我们挖掘的算法，看看差距在哪里，然后试图利用这个现有的工具，做一些工作。</p>
 </div>
 
 
@@ -142,12 +130,12 @@
   
 
 
-<time datetime="2013-08-20T21:47:00+08:00" pubdate data-updated="true">Aug 20<span>th</span>, 2013</time>
+<time datetime="2013-09-23T14:44:00+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/suan-fa-ji-chu/'>算法基础</a>
+    <a class='category' href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化</a>, <a class='category' href='/blog/categories/wen-ben-wa-jue/'>文本挖掘</a>
   
 </span>
 
@@ -156,7 +144,7 @@
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/09/23/summary-of-knowledge-visualization-project-stage-1/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/09/23/summary-of-knowledge-visualization-project-stage-1/" >Tweet</a>
   
   
   
@@ -165,10 +153,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/08/19/my-general-view-on-data-visualization/" title="Previous Post: 对数据可视化的初步认识">&laquo; 对数据可视化的初步认识</a>
+        <a class="basic-alignment left" href="/blog/2013/09/22/python-style-guide/" title="Previous Post: Python Style Guide">&laquo; Python Style Guide</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/" title="Next Post: 为控件增加鼠标悬浮提示">为控件增加鼠标悬浮提示 &raquo;</a>
       
     </p>
   </footer>
@@ -271,8 +257,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model/';
-        var disqus_url = 'http://xutianming.github.io/blog/2013/08/20/recursion-problem-and-hmm-model/';
+        var disqus_identifier = 'http://xutianming.github.io/blog/2013/09/23/summary-of-knowledge-visualization-project-stage-1/';
+        var disqus_url = 'http://xutianming.github.io/blog/2013/09/23/summary-of-knowledge-visualization-project-stage-1/';
         var disqus_script = 'embed.js';
       
     (function () {
