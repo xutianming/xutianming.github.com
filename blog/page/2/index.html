@@ -9,7 +9,8 @@
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="前几天，姥爷去世了。最疼爱我的姥爷，离开了。这几天一直在忙着各种后事，今天终于得以清闲，和爸爸妈妈一起给姥爷打扫房间，处理一些剩余的食物，几年来，也是第一次再好好看看这栋房子，也许，以后再也没机会了吧。 现在居住的大院里，几乎有我童年的所有回忆，从幼儿园起，我就在这所大院里玩，幼儿园-学前班-小学 &hellip;">
+  <meta name="description" content="输入：
+1 . 未说明有多少个input block while(scanf("%d %d",&amp;a,&amp;b)!=EOF) { ... } scanf返回的是输入的变量的个数，EOF=-1表示没有输入 while(cin&gt;&gt;a&gt;&gt;b) { ... }2 . &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +66,85 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/07/c-plus-plus-input-and-output/">C++输入输出总结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-07T09:23:00+08:00" pubdate data-updated="true">Aug 7<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/08/07/c-plus-plus-input-and-output/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>输入：
+1 . 未说明有多少个input block</p>
+
+<pre><code>while(scanf("%d %d",&amp;a,&amp;b)!=EOF) 
+{    ...    }
+</code></pre>
+
+<p>scanf返回的是输入的变量的个数，EOF=-1表示没有输入</p>
+
+<pre><code>while(cin&gt;&gt;a&gt;&gt;b) {    ...    }2 . 说明有N个input block    
+
+scanf("%d",&amp;n) ;    for( i=0 ; i&lt;n ; i++ )     {...} 
+    cin &gt;&gt; n;   for( i=0 ; i&lt;n ; i++ )     { .... } 3 . 输入是一整行的字符串
+C  
+char buf[20];     gets(buf); 
+
+// 如果用string buf;来保存：
+getline( cin , buf );     // 如果用char buf[ 255 ]; 来保存：     cin.getline( buf, 255 );
+</code></pre>
+
+<p><code>scanf(“ %s%s”,str1,str2)</code>，在多个字符串之间用一个或多个空格分隔；若使用gets函数，应为gets(str1); gets(str2); 字符串之间用回车符作分隔。通常情况下，接受短字符用scanf函数，接受长字符用gets函数。而getchar函数每次只接受一个字符，经常c=getchar()这样来使用。getline 是一个函数，它可以接受用户的输入的字符，直到已达指定个数，或者用户输入了特定的字符。它的函数声明形式（函数原型）如下：    <code>istream&amp; getline(char line[], int size, char endchar = '\n');</code>不用管它的返回类型，来关心它的三个参数：
+* char line[]： 就是一个字符数组，用户输入的内容将存入在该数组内。<em> int size : 最多接受几个字符？用户超过size的输入都将不被接受。</em> char endchar :当用户输入endchar指定的字符时，自动结束。默认是回车符。例如：char name[4];cin.getline(name,4,&lsquo;\n&rsquo;);由于 endchar 默认已经是 &lsquo;\n&#8217;，所以后面那行也可以写成：cin.getline(name,4);输出：
+1 . 输出之后换行    C:    {     &hellip;.     printf(&ldquo;%d\n&rdquo;,ans);     }     C++:    {     &hellip;     cout &lt;&lt; ans &lt;&lt; endl;     }
+2 . 每个输出之间有空行</p>
+
+<pre><code>  while(scanf("%d %d",&amp;a, &amp;b) != EOF)           printf("%d\n\n",a+b);    
+C++:    cout &lt;&lt; ans &lt;&lt; endl &lt;&lt; endl;
+</code></pre>
+
+<p>3 . 输出结束之后输出空行</p>
+
+<pre><code>C:    for (k=0;k&lt;count;k++) {     while (…) {              printf(" %d\n",result);       
+  }       
+  if (k!=count-1) printf("\n");     
+}     C++   // 类似，输出语句换一下即可。
+</code></pre>
+
+<p>在学习了以上基础之后，我在HDUOJ上做了十几个题目来练习，也犯了不少错误，总结如下，以避免以后再犯，提高编程的成功率和效率：
+* 未说明有多少个输入块时，scanf要和EOF比较，这个和cin的使用不同，不然的话OJ上会超时
+* 同样的道理，也不要用<code>while(true)</code>来代替<code>while(cin&gt;&gt;a)</code>，也会在输入结束的时候，仍然执行从而超时
+* 再就是输出有换行，要输出两个<code>endl</code>的时候，要注意假如指定输入个数，最后一次输出之后，不要再换行的。没指定有多少个输入的时候，则每次输出都换行。
+另外，我还犯了其他一些低级错误，比如数据类型定义错误等等，这些错误自己调试的时候，不会出错，但是OJ上指定的某些测试用例肯定是没法通过的。所以要格外小心，OJ也不会告诉你哪个测试用例挂了，就很浪费时间，为了提高效率，写程序的时候就得多注意下，看清题目。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -460,11 +540,15 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (3)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (4)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (3)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (4)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/09/28/hadoop-first-trial/">Hadoop环境搭建小结</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/09/24/summary-of-wikivis-project-2/">知识可视化项目第一阶段总结2</a>
@@ -480,10 +564,6 @@
     
       <li class="post">
         <a href="/blog/2013/09/22/preprocessing/">打表与预处理</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/14/chi-square-information-gain-and-mutual-information/">卡方校验、信息增益和互信息</a>
       </li>
     
   </ul>
@@ -523,7 +603,7 @@
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 115.0%'>CodeSegment(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 145.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 145.0%'>文本挖掘(3)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(4)</a> <a href='/blog/categories/杂项' style='font-size: 130.0%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 115.0%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 160.0%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 115.0%'>编程语言(1)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 115.0%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 115.0%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 145.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 145.0%'>文本挖掘(3)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(4)</a> <a href='/blog/categories/杂项' style='font-size: 130.0%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 115.0%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 160.0%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 115.0%'>编程语言(1)</a> </span>
 </section>
 
   

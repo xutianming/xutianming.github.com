@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>为控件增加鼠标悬浮提示 - Xutianming Blog</title>
+  <title>Hadoop环境搭建小结 - Xutianming Blog</title>
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="上星期阅读了《Interactive Data Visualization for the Web》一书之后，便开始尝试使用D3js了。以前一直没怎么写过前端和界面，个人对于坐标位置布局什么的相当没感觉，总是乱乱的。所以这次写来，大部分也都是用的别人写好的现成的东西，在这个基础上做些改动。 &hellip;">
+  <meta name="description" content="这两天一直在忙着搭Wikipedia Miner的环境，其中用到了Java和Hadoop相关。Java因为以前做过TopCoder，对于环境配置、Ant使用什么的还比较熟悉，也没有遇到什么大的问题。主要就是Hadoop了，虽然以前实习的时候，也多少接触过Hadoop， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3">
+  <link rel="canonical" href="http://xutianming.github.io/blog/2013/09/28/hadoop-first-trial">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Xutianming Blog" type="application/atom+xml">
@@ -68,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">为控件增加鼠标悬浮提示</h1>
+      <h1 class="entry-title">Hadoop环境搭建小结</h1>
     
     
       <p class="meta">
@@ -84,7 +84,7 @@
   
 
 
-<time datetime="2013-08-26T14:21:00+08:00" pubdate data-updated="true">Aug 26<span>th</span>, 2013</time>
+<time datetime="2013-09-28T15:37:00+08:00" pubdate data-updated="true">Sep 28<span>th</span>, 2013</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -93,29 +93,30 @@
   </header>
 
 
-<div class="entry-content"><p>上星期阅读了《Interactive Data Visualization for the Web》一书之后，便开始尝试使用D3js了。以前一直没怎么写过前端和界面，个人对于坐标位置布局什么的相当没感觉，总是乱乱的。所以这次写来，大部分也都是用的别人写好的现成的东西，在这个基础上做些改动。</p>
+<div class="entry-content"><p>这两天一直在忙着搭Wikipedia Miner的环境，其中用到了Java和Hadoop相关。Java因为以前做过TopCoder，对于环境配置、Ant使用什么的还比较熟悉，也没有遇到什么大的问题。主要就是Hadoop了，虽然以前实习的时候，也多少接触过Hadoop，用过Hive写过一些Hql什么的，但是只是一些皮毛吧。自己搭建Hadoop环境还是头一回，这次要在我的Mac上，搭一个单机器的双节点伪分布式环境。具体的步骤，参考了官方的手册。</p>
 
-<p>今天做的改动之一就是为标签Text增加鼠标悬浮事件，提示改概念的定义。</p>
+<p><a href="http://sourceforge.net/apps/mediawiki/wikipedia-miner/index.php?title=Extraction">Wikipedia Miner搭建手册</a></p>
 
-<p>效果图如下：</p>
+<p><a href="http://hadoop.apache.org/docs/stable/single_node_setup.html#PseudoDistributed">Apache Hadoop环境搭建手册</a></p>
 
-<p><img src="http://i.imgur.com/0E53nrC.jpg" alt="Imgur" /></p>
+<p><a href="http://wiki.apache.org/hadoop/Running_Hadoop_On_OS_X_10.5_64-bit_%28Single-Node_Cluster%29">OSX Hadoop环境搭建手册</a></p>
 
-<p>这段代码参考了StackOverflow上的这个<a href="http://stackoverflow.com/questions/10805184/d3-show-data-on-mouseover-of-circle">帖子</a></p>
+<p>步骤基本上是结合这几个看的，第一次搭建，就没考虑太多安全性，合理性。先搭个能用的环境体验下再说。具体步骤列举如下：</p>
 
-<pre><code>// Show defination of the current item
-function show_defination(d) {
-    d3.select(this)
-        .append("svg:title")
-        .text(function(d) {return d.def;})
-        .attr("x",function(d) {return d.x+10;})
-        .attr("y",function(d) {return d.y+10;})
-}
-</code></pre>
+<ol>
+<li>安装JDK并配置JAVA_HOME(PATH,CLASSPATH在MAC上好像是不需要配置的)，<a href="http://blog.csdn.net/johnstrive/article/details/7791451">参考</a></li>
+<li>开启mac的远程登录功能，也就是教程里的ssh。<a href="http://stackoverflow.com/questions/12369172/how-to-install-sshd-on-mac">参考</a></li>
+<li>通过生成dsa秘钥等工作，ssh localhost可以不输入密码。<a href="http://wiki.apache.org/hadoop/Running_Hadoop_On_OS_X_10.5_64-bit_%28Single-Node_Cluster%29">参考</a>中讲ssh那段有。</li>
+<li>下载安装Hadoop，然后配置。<a href="http://hadoop.apache.org/docs/stable/single_node_setup.html#PseudoDistributed">参考</a></li>
+<li>运行Hadoop。</li>
+</ol>
 
-<p>我添加的代码如上，绑定在text控件的mouseover时间上。<code>on("mouseover",show_defination);</code></p>
 
-<p>另外我还发现了一个很好的在线校验json的<a href="http://jsonlint.com/">网站</a></p>
+<p>上面列举出了我配置过来所参考的资料，我当然没有一次成功，每一步都有点小波折的，上面的资料都是我使用的，经过验证的方法。</p>
+
+<p>接着我启动Hadoop，上传我的文件。总是抛异常，就像这个<a href="http://stackoverflow.com/questions/10097246/no-data-nodes-are-started">问题</a>里描述的，SO上有很多类似问题，解决方法也都一样，删除dfs里面的，name和data文件，然后重新format。但是我照做了就没成功，我也没有去读那些log，但是运气比较好的，我发现其实我的Hadoop根本就没有启动任何datanode成功。于是根据提示消息，我找到了这个<a href="http://stackoverflow.com/questions/6307244/hadoop-namenode-format-returns-a-java-net-unknownhostexception">问题</a>。最终我通过在hosts文件中，加了别名，解决了这个问题。</p>
+
+<p>看起来很简单的过程，折腾了得有好几个钟头。到现在为止，hadoop基本上没问题了。但是总体的Wikipedia Miner的环境，还没搭建成功，还得解决各种Exception。等可以顺利使用Wikipedia Miner之后，我还要好好研究下，Wikipedia Miner的hadoop job部分是怎么写的。</p>
 </div>
 
 
@@ -138,12 +139,12 @@ function show_defination(d) {
   
 
 
-<time datetime="2013-08-26T14:21:00+08:00" pubdate data-updated="true">Aug 26<span>th</span>, 2013</time>
+<time datetime="2013-09-28T15:37:00+08:00" pubdate data-updated="true">Sep 28<span>th</span>, 2013</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/codesegment/'>CodeSegment</a>, <a class='category' href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化</a>
+    <a class='category' href='/blog/categories/hadoop/'>Hadoop</a>
   
 </span>
 
@@ -152,7 +153,7 @@ function show_defination(d) {
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/09/28/hadoop-first-trial/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/09/28/hadoop-first-trial/" >Tweet</a>
   
   
   
@@ -161,10 +162,8 @@ function show_defination(d) {
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/08/20/recursion-problem-and-hmm-model/" title="Previous Post: ACM中递归问题解决方法思考">&laquo; ACM中递归问题解决方法思考</a>
+        <a class="basic-alignment left" href="/blog/2013/09/24/summary-of-wikivis-project-2/" title="Previous Post: 知识可视化项目第一阶段总结2">&laquo; 知识可视化项目第一阶段总结2</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/09/02/dynamic-programming/" title="Next Post: 动态规划">动态规划 &raquo;</a>
       
     </p>
   </footer>
@@ -267,8 +266,8 @@ function show_defination(d) {
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/';
-        var disqus_url = 'http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/';
+        var disqus_identifier = 'http://xutianming.github.io/blog/2013/09/28/hadoop-first-trial/';
+        var disqus_url = 'http://xutianming.github.io/blog/2013/09/28/hadoop-first-trial/';
         var disqus_script = 'embed.js';
       
     (function () {

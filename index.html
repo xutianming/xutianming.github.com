@@ -9,7 +9,7 @@
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="今天和乐乐讨论了发表了Wikipedia Miner思路的论文，感觉颇深，故在此记录一下。 今天其实并没有讨论太多论文的内容，主要是基于项目第一阶段的反思，所以感觉还是很有意义的。这样的话，可以一步一步的提高我们解决问题的能力。关于面对一个要解决的课题的时候，我们从什么角度去思考它的解决方案， &hellip;">
+  <meta name="description" content="这两天一直在忙着搭Wikipedia Miner的环境，其中用到了Java和Hadoop相关。Java因为以前做过TopCoder，对于环境配置、Ant使用什么的还比较熟悉，也没有遇到什么大的问题。主要就是Hadoop了，虽然以前实习的时候，也多少接触过Hadoop， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,67 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/09/28/hadoop-first-trial/">Hadoop环境搭建小结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-28T15:37:00+08:00" pubdate data-updated="true">Sep 28<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/09/28/hadoop-first-trial/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>这两天一直在忙着搭Wikipedia Miner的环境，其中用到了Java和Hadoop相关。Java因为以前做过TopCoder，对于环境配置、Ant使用什么的还比较熟悉，也没有遇到什么大的问题。主要就是Hadoop了，虽然以前实习的时候，也多少接触过Hadoop，用过Hive写过一些Hql什么的，但是只是一些皮毛吧。自己搭建Hadoop环境还是头一回，这次要在我的Mac上，搭一个单机器的双节点伪分布式环境。具体的步骤，参考了官方的手册。</p>
+
+<p><a href="http://sourceforge.net/apps/mediawiki/wikipedia-miner/index.php?title=Extraction">Wikipedia Miner搭建手册</a></p>
+
+<p><a href="http://hadoop.apache.org/docs/stable/single_node_setup.html#PseudoDistributed">Apache Hadoop环境搭建手册</a></p>
+
+<p><a href="http://wiki.apache.org/hadoop/Running_Hadoop_On_OS_X_10.5_64-bit_%28Single-Node_Cluster%29">OSX Hadoop环境搭建手册</a></p>
+
+<p>步骤基本上是结合这几个看的，第一次搭建，就没考虑太多安全性，合理性。先搭个能用的环境体验下再说。具体步骤列举如下：</p>
+
+<ol>
+<li>安装JDK并配置JAVA_HOME(PATH,CLASSPATH在MAC上好像是不需要配置的)，<a href="http://blog.csdn.net/johnstrive/article/details/7791451">参考</a></li>
+<li>开启mac的远程登录功能，也就是教程里的ssh。<a href="http://stackoverflow.com/questions/12369172/how-to-install-sshd-on-mac">参考</a></li>
+<li>通过生成dsa秘钥等工作，ssh localhost可以不输入密码。<a href="http://wiki.apache.org/hadoop/Running_Hadoop_On_OS_X_10.5_64-bit_%28Single-Node_Cluster%29">参考</a>中讲ssh那段有。</li>
+<li>下载安装Hadoop，然后配置。<a href="http://hadoop.apache.org/docs/stable/single_node_setup.html#PseudoDistributed">参考</a></li>
+<li>运行Hadoop。</li>
+</ol>
+
+
+<p>上面列举出了我配置过来所参考的资料，我当然没有一次成功，每一步都有点小波折的，上面的资料都是我使用的，经过验证的方法。</p>
+
+<p>接着我启动Hadoop，上传我的文件。总是抛异常，就像这个<a href="http://stackoverflow.com/questions/10097246/no-data-nodes-are-started">问题</a>里描述的，SO上有很多类似问题，解决方法也都一样，删除dfs里面的，name和data文件，然后重新format。但是我照做了就没成功，我也没有去读那些log，但是运气比较好的，我发现其实我的Hadoop根本就没有启动任何datanode成功。于是根据提示消息，我找到了这个<a href="http://stackoverflow.com/questions/6307244/hadoop-namenode-format-returns-a-java-net-unknownhostexception">问题</a>。最终我通过在hosts文件中，加了别名，解决了这个问题。</p>
+
+<p>看起来很简单的过程，折腾了得有好几个钟头。到现在为止，hadoop基本上没问题了。但是总体的Wikipedia Miner的环境，还没搭建成功，还得解决各种Exception。等可以顺利使用Wikipedia Miner之后，我还要好好研究下，Wikipedia Miner的hadoop job部分是怎么写的。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -582,85 +643,6 @@ function show_defination(d) {
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/07/c-plus-plus-input-and-output/">C++输入输出总结</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-07T09:23:00+08:00" pubdate data-updated="true">Aug 7<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/08/07/c-plus-plus-input-and-output/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>输入：
-1 . 未说明有多少个input block</p>
-
-<pre><code>while(scanf("%d %d",&amp;a,&amp;b)!=EOF) 
-{    ...    }
-</code></pre>
-
-<p>scanf返回的是输入的变量的个数，EOF=-1表示没有输入</p>
-
-<pre><code>while(cin&gt;&gt;a&gt;&gt;b) {    ...    }2 . 说明有N个input block    
-
-scanf("%d",&amp;n) ;    for( i=0 ; i&lt;n ; i++ )     {...} 
-    cin &gt;&gt; n;   for( i=0 ; i&lt;n ; i++ )     { .... } 3 . 输入是一整行的字符串
-C  
-char buf[20];     gets(buf); 
-
-// 如果用string buf;来保存：
-getline( cin , buf );     // 如果用char buf[ 255 ]; 来保存：     cin.getline( buf, 255 );
-</code></pre>
-
-<p><code>scanf(“ %s%s”,str1,str2)</code>，在多个字符串之间用一个或多个空格分隔；若使用gets函数，应为gets(str1); gets(str2); 字符串之间用回车符作分隔。通常情况下，接受短字符用scanf函数，接受长字符用gets函数。而getchar函数每次只接受一个字符，经常c=getchar()这样来使用。getline 是一个函数，它可以接受用户的输入的字符，直到已达指定个数，或者用户输入了特定的字符。它的函数声明形式（函数原型）如下：    <code>istream&amp; getline(char line[], int size, char endchar = '\n');</code>不用管它的返回类型，来关心它的三个参数：
-* char line[]： 就是一个字符数组，用户输入的内容将存入在该数组内。<em> int size : 最多接受几个字符？用户超过size的输入都将不被接受。</em> char endchar :当用户输入endchar指定的字符时，自动结束。默认是回车符。例如：char name[4];cin.getline(name,4,&lsquo;\n&rsquo;);由于 endchar 默认已经是 &lsquo;\n&#8217;，所以后面那行也可以写成：cin.getline(name,4);输出：
-1 . 输出之后换行    C:    {     &hellip;.     printf(&ldquo;%d\n&rdquo;,ans);     }     C++:    {     &hellip;     cout &lt;&lt; ans &lt;&lt; endl;     }
-2 . 每个输出之间有空行</p>
-
-<pre><code>  while(scanf("%d %d",&amp;a, &amp;b) != EOF)           printf("%d\n\n",a+b);    
-C++:    cout &lt;&lt; ans &lt;&lt; endl &lt;&lt; endl;
-</code></pre>
-
-<p>3 . 输出结束之后输出空行</p>
-
-<pre><code>C:    for (k=0;k&lt;count;k++) {     while (…) {              printf(" %d\n",result);       
-  }       
-  if (k!=count-1) printf("\n");     
-}     C++   // 类似，输出语句换一下即可。
-</code></pre>
-
-<p>在学习了以上基础之后，我在HDUOJ上做了十几个题目来练习，也犯了不少错误，总结如下，以避免以后再犯，提高编程的成功率和效率：
-* 未说明有多少个输入块时，scanf要和EOF比较，这个和cin的使用不同，不然的话OJ上会超时
-* 同样的道理，也不要用<code>while(true)</code>来代替<code>while(cin&gt;&gt;a)</code>，也会在输入结束的时候，仍然执行从而超时
-* 再就是输出有换行，要输出两个<code>endl</code>的时候，要注意假如指定输入个数，最后一次输出之后，不要再换行的。没指定有多少个输入的时候，则每次输出都换行。
-另外，我还犯了其他一些低级错误，比如数据类型定义错误等等，这些错误自己调试的时候，不会出错，但是OJ上指定的某些测试用例肯定是没法通过的。所以要格外小心，OJ也不会告诉你哪个测试用例挂了，就很浪费时间，为了提高效率，写程序的时候就得多注意下，看清题目。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -673,11 +655,15 @@ C++:    cout &lt;&lt; ans &lt;&lt; endl &lt;&lt; endl;
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (3)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (4)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (3)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (4)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/09/28/hadoop-first-trial/">Hadoop环境搭建小结</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/09/24/summary-of-wikivis-project-2/">知识可视化项目第一阶段总结2</a>
@@ -693,10 +679,6 @@ C++:    cout &lt;&lt; ans &lt;&lt; endl &lt;&lt; endl;
     
       <li class="post">
         <a href="/blog/2013/09/22/preprocessing/">打表与预处理</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/14/chi-square-information-gain-and-mutual-information/">卡方校验、信息增益和互信息</a>
       </li>
     
   </ul>
@@ -736,7 +718,7 @@ C++:    cout &lt;&lt; ans &lt;&lt; endl &lt;&lt; endl;
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 115.0%'>CodeSegment(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 145.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 145.0%'>文本挖掘(3)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(4)</a> <a href='/blog/categories/杂项' style='font-size: 130.0%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 115.0%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 160.0%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 115.0%'>编程语言(1)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 115.0%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 115.0%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 145.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 145.0%'>文本挖掘(3)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(4)</a> <a href='/blog/categories/杂项' style='font-size: 130.0%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 115.0%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 160.0%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 115.0%'>编程语言(1)</a> </span>
 </section>
 
   
