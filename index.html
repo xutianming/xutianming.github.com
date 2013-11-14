@@ -9,7 +9,7 @@
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="在过去的一个月里，完成了一个行业关键词分类的项目，100w的训练数据，1000w的测试数据，33个分类。项目期限已经到了，但是我们的准确率目前只有88%，尝试了很多方法，遇到很多困难，也走过弯路。 项目结束并且效果不好，自然要寻找原因。一方面是等待比赛完全结束，公布冠军的解决方法，来开阔下眼界； &hellip;">
+  <meta name="description" content="在上一篇博客里，详细讲述了项目的具体过程。项目结束之后，从昨天开始，我就开始着手去查看一些资料，整理思路，看看项目的过程中，哪些是有理论依据、切实可行；哪些只是基于个人经验的推论，可能存在很多的纰漏。从而能找到一些提高的可能性，同时也梳理一下整体的思路，在以后遇到问题的时候，可以有的放矢。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +71,92 @@
       
   <header>
     
+      <h1 class="entry-title"><a href="/blog/2013/11/14/text-classification-step-by-step2/">行业关键词分类整理2</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-14T12:45:00+08:00" pubdate data-updated="true">Nov 14<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/11/14/text-classification-step-by-step2/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>在上一篇博客里，详细讲述了项目的具体过程。项目结束之后，从昨天开始，我就开始着手去查看一些资料，整理思路，看看项目的过程中，哪些是有理论依据、切实可行；哪些只是基于个人经验的推论，可能存在很多的纰漏。从而能找到一些提高的可能性，同时也梳理一下整体的思路，在以后遇到问题的时候，可以有的放矢。知道哪些地方可以不再进行尝试了，哪些地方需要着重考虑。</p>
+
+<p>下面的思路整理，是参考了《信息检索导论》书中，对于文本分类的介绍，并且结合了这次项目的经历。书是2010年出版，偏向综述性质，也兼顾了一定的细节。毕竟只参考了一本书，不敢说尽善尽美，以后如果有读到更好的、更全面的，会再来补充的。</p>
+
+<p>首先是文档的表示形式，有两种，一种是向量空间模型（VSM），目前我所使用的，全部都是利用向量空间模型来做的，即用特征向量来表示文档。第二种是，潜语义空间，是自然语言处理领域的，接下来，我会研究和尝试下这个方面，目前了解很少，就不多讲了。</p>
+
+<p>下面的解决方案，我都是在VSM的基础上理解的，也许也能适用于潜语义空间。</p>
+
+<p>总体来说，一个高准确率的分类系统，是由一个自动分类器和一系列人工撰写的布尔规则来组成的。前者由数据通过机器学习得来，后者由领域专家人工撰写。这一点，在我们的项目过程中，我大部分时间都是追求分类器的高准确率，基本上没有花很多时间去做规则。</p>
+
+<p>在面对一个文本分类项目的时候，首先要关注的就是训练数据：</p>
+
+<ol>
+<li>假如没有标记好的训练数据，而有领域专家的话，采用人工编写规则的方法。这种方法虽然要花很多人力，但是往往分类的效果并不差，往往有高的准确率和召回率。</li>
+<li>如果拥有的训练数据非常少。应该采用高偏差低方差的分类器，比如NB。而像KNN这种对训练数据拟合比较好的，低偏差高方差的分类器，就效果不太好。对应的如果我们使用SVM，参数C倾向于取的小一点。另外除了利用现有的训练数据外，通过半监督学习的方式，来增加训练数据，也是一个思路。主动学习系统，就是建立一个系统来确定需要标注那些文档。</li>
+<li>如果拥有比较多的已经标注的数据（我们的这个项目就是这种情况）。那么分类器的选择，对于最终的效果就没有太大的影响。这种情况下，一般使用SVM，因为很多实验表明了，SVM是同等条件下来说，效果比较好的分类器。在我们的项目中，就有这种情况，我们尝试了NB和线性核的Liblinear，都没有本质的提升，准确率都在80%~90%之间。</li>
+</ol>
+
+
+<p>在上面的第三种情况下，分类器的选择并不重要，那么如果提高分类的效果呢？</p>
+
+<ol>
+<li>撰写人工规则。这对于修正某一特定类的误伤，比较立竿见影。指望这个，大幅度提高准确率，感觉还是要有很多工作要做的。</li>
+<li>使用领域特征。一个普遍的事实，采用领域相关的文本特征，在性能上会比采用新的机器学习方法获得更大的提升。</li>
+<li>采用复杂的分类体系。比如层次系统，比如使用弱分类器的组合，Voting、Bagging、Boosting等方法。再辅助以人工审核，将低分类置信度的数据，纳入审核系统。</li>
+</ol>
+
+
+<p>下面详细说一下，其中的第二条，也就是领域特征的选取。</p>
+
+<p>对文本分类问题，如果对待特定的问题加入合适的额外特征，分类的效果还能显著提升。这一过程往往称为特征工程，目前来说，特征工程还是主要依赖人的技巧而不是机器学习的结果，好的特征工程往往可以大幅度提高分类器的效果。（写到这里我想，那些在项目中能有95%以上准确率的，应该都是花时间做了特征工程的。到时候公布冠军的代码的时候，可以验证一下。）</p>
+
+<p>除此之外，还有一些技巧。</p>
+
+<ol>
+<li>将特殊字符串替换成更知名的词条。举例来说，在化工类中，可能出现氯化钠、氧化钙等名词，假如没有类似的类的话。这些应是非常有区分度的特征，但是在分类过程中，首先分词器可能无法识别这种词，其次用chi-square也许能提取出这种特征，但是在tf-idf赋权的时候，他们的权重也不可能高（因为不会出现太多次）。假如把这些词统一替换成，“化学物质”类似的更知名的词条，那么化学物质就能是个很好的特征了。</li>
+<li>有时候，词的部分和词的多词模式，也许是很好的特征。这很类似于我们在项目采用的2-gram、3-gram组合词。总的思路是先通过好的方法，去发现一些好的多词模式的候选，加入特征集之中，再利用常规方法去选择特征。具体用什么方法去挖掘好的多词模式以及如何使用。就目前来说，对我都是一个疑问。接下来，我也会有针对的性的读一些这方面的资料。</li>
+<li>基于文章结构。比如特征出现在标题中，特征的权重翻倍。新闻类文章，特征出现在第一段或者每段的第一句话中，增加权重之类的。这就是基于位置的特征选择方法。在之前的Wikipedia的项目中，有一些类似的情况。</li>
+</ol>
+
+
+<p>综上可知，大致可做的工作就这么些。基本上对于每个文本分类项目，都有自己的特性，也许整体思路都是一样的。但是各个环节也都影响着最终的结果。结合我们的这个行业关键词分类的项目来看，我们可做的工作有：</p>
+
+<ol>
+<li>撰写人工规则。这个虽然可以提升效果，获得好成绩，但是目前阶段来讲，我更倾向于直接从别人那里获得做这个工作的最佳实践而不是自己去花大量的时间去实践。所以这个方向暂时不考虑，可以读一些方法性的文章。</li>
+<li>领域特征选择。如何去做特征工程？如何可以系统的去选择领域特征。这是个需要研究的方法性问题。</li>
+<li>如何选择和使用多词模式。凭借目前对这份数据的浅薄的理解，我们提出了一些方法，但是实践证明效果不好。我们首先，组合出所有可能的2-gram，然后利用2-gram出现的频率，以及2-gram的组成单元出现次数的比例，来筛选2-gram。选出来之后，我们就去根据这些2-gram去合并了原始的中文分词结果。这样相当于我们可能会淹没掉2-gram的每个组成单元的，可能的高区分度。这种方式显然不好，所以需要通过更多的阅读，来获得这方面的确定性的知识。而不是自己胡乱尝试。</li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
       <h1 class="entry-title"><a href="/blog/2013/11/14/text-classification-step-by-step/">行业关键词分类项目总结1</a></h1>
     
     
@@ -105,8 +191,8 @@
 <ol>
 <li>利用提供的文本数据进行文本分类。其中包括了利用lucene的IKAnalyzer进行分词、利用Chi-square进行特征选择、利用tf-idf作为权重生成文本的向量表示形式、利用Liblinear进行线性核的分类。第一次准确率87%。由于以上工作都是在Hadoop上完成的，加上学习和适应Hadoop平台的时间，其实只要一天的工作量的事情，做了2周（比赛承办方提供的Hadoop集群的限制实在是太多了）。</li>
 <li>利用一些人工制定的规则，挖掘一些有着高区分度的词，利用这些词去修正上述文本分类的结果。这一步，把准确率提高到了88.5%。这也是我们最好的成绩了，本来可以利用这种方法获得更多的准确率的提升的，但是感觉可学习的东西很多，不想把更多的时间放在对数据的理解上。</li>
-<li>利用关键词的用户购买信息去做关键词分类。这样做是建立在“购买关键词的用户相似，那么关键词倾向于属于同一类”这一假设的基础上的。所以想对&lt;关键词-用户>矩阵，应用分类算法。这一矩阵存在着维度过高（600w维）和过于稀疏的问题（很少有两个用户买同一个关键字）。所以推断直接分类既不可行，效果也不好。</li>
-<li>这一条详细讲一下用户矩阵的使用。首先想到的是对用户聚类，使用k-means。但是由于上面所说的稀疏性问题，所以聚类效果也不好。于是想到利用第一次文本分类的结果，补充训练数据，另外首先对用户聚类（已经聚好了，33类），这样&lt;用户-关键词>矩阵维度33维，并且不稀疏。可以使用k-means对用户进行聚类了，分别制定k为100和1000，进行聚类。在使用的过程中，发现了一个问题，k-means一般是基于距离的，而在这个项目的用户中，和质心距离相等的两个点，并不一定相同，距离计算过程中把所有的维度（关键词类别）等同看待，而现实中，我们购买了不同维度（类别）的关键词的用户，虽然距离相等，但是是属于不同类的。基于上述思考，我放弃了使用k-means，按照自己的想法，对用户进行了聚类。得到了2w类左右的用户。用户聚类之后，就达到了对&lt;关键词-用户>矩阵的降维和去稀疏的目的。可以应用分类算法了。</li>
+<li>利用关键词的用户购买信息去做关键词分类。这样做是建立在“购买关键词的用户相似，那么关键词倾向于属于同一类”这一假设的基础上的。所以想对&lt;关键词-用户>向量，应用分类算法。这一矩阵存在着维度过高（600w维）和过于稀疏的问题（很少有两个用户买同一个关键字）。所以推断直接分类既不可行，效果也不好。</li>
+<li>这一条详细讲一下用户矩阵的使用。首先想到的是对用户聚类，以降低&lt;关键词-用户>向量的维度和稀疏性，使用k-means。但是由于上面所说的稀疏性问题，所以聚类效果也不好。于是想到利用第一次文本分类的结果，补充训练数据，另外首先对关键词聚类（已经聚好了，33类），这样&lt;用户-关键词>向量维度33维，并且不稀疏。可以使用k-means对用户进行聚类了，分别制定k为100和1000，进行聚类。在使用的过程中，发现了一个问题，k-means一般是基于距离的，而在这个项目的用户中，和质心距离相等的两个点，并不一定相同，距离计算过程中把所有的维度（关键词类别）等同看待，而现实中，我们购买了不同维度（类别）的关键词的用户，虽然距离相等，但是是属于不同类的。基于上述思考，我放弃了使用k-means，按照自己的想法，对用户进行了聚类。得到了2w类左右的用户。用户聚类之后，就达到了对&lt;关键词-用户>矩阵的降维和去稀疏的目的。可以应用分类算法了。</li>
 <li>利用上述的方法，利用用户对关键词分类。但是结果非常不理想。原因在于，我们在第3步里的假设是不对的。也就是说，假如几个关键词，被几个相同或者相似的用户购买，并不代表关键词属于同一类。分析bad case可以看出，比如公司转让，服装公司转让被分入了服装类，房地产公司转让被分入了房地产类。但是这些关键词应该是被一个公司转让中介性质的用户购买了。所以从用户角度去分类，是不可行的。</li>
 <li>经过上面的尝试，时间已经过去了3周。我们放弃了使用用户购买信息，试图提高文本分类的效果。首先我们发现，需要利用多词模式去提高特征质量，比如，搬家是个特征词，公司不是，但是搬家公司，是个非常有区分度的特征。由于没有事先的积累，也找不到现成的工具，我们自己根据经验和对数据的理解，写了bi-gram和tri-gram的map-reduce组合算法。使用频率对多词模式进行筛选，然后加入特征集训练。这一步，问题很多，因为大部分是拍脑袋定的，感觉很不科学，接下来，我可能会对这方面做一些针对性的阅读。</li>
 <li>重复了文本分类的步骤，做了第二版的分类器，但是由于多词模式的筛选和使用都有些问题，所以这一版分类器没有取得预期的进步。</li>
@@ -641,66 +727,6 @@ if __name__ == '__main__':
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/">为控件增加鼠标悬浮提示</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-08-26T14:21:00+08:00" pubdate data-updated="true">Aug 26<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>上星期阅读了《Interactive Data Visualization for the Web》一书之后，便开始尝试使用D3js了。以前一直没怎么写过前端和界面，个人对于坐标位置布局什么的相当没感觉，总是乱乱的。所以这次写来，大部分也都是用的别人写好的现成的东西，在这个基础上做些改动。</p>
-
-<p>今天做的改动之一就是为标签Text增加鼠标悬浮事件，提示改概念的定义。</p>
-
-<p>效果图如下：</p>
-
-<p><img src="http://i.imgur.com/0E53nrC.jpg" alt="Imgur" /></p>
-
-<p>这段代码参考了StackOverflow上的这个<a href="http://stackoverflow.com/questions/10805184/d3-show-data-on-mouseover-of-circle">帖子</a></p>
-
-<pre><code>// Show defination of the current item
-function show_defination(d) {
-    d3.select(this)
-        .append("svg:title")
-        .text(function(d) {return d.def;})
-        .attr("x",function(d) {return d.x+10;})
-        .attr("y",function(d) {return d.y+10;})
-}
-</code></pre>
-
-<p>我添加的代码如上，绑定在text控件的mouseover时间上。<code>on("mouseover",show_defination);</code></p>
-
-<p>另外我还发现了一个很好的在线校验json的<a href="http://jsonlint.com/">网站</a></p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -713,11 +739,15 @@ function show_defination(d) {
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (4)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (6)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (7)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/text-classification-step-by-step2/">行业关键词分类整理2</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/11/14/text-classification-step-by-step/">行业关键词分类项目总结1</a>
@@ -733,10 +763,6 @@ function show_defination(d) {
     
       <li class="post">
         <a href="/blog/2013/09/24/summary-of-wikivis-project-2/">知识可视化项目第一阶段总结2</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/23/summary-of-knowledge-visualization-project-stage-1/">知识可视化项目第一阶段小结</a>
       </li>
     
   </ul>
@@ -776,7 +802,7 @@ function show_defination(d) {
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 110.0%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 110.0%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 130.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 140.0%'>文本挖掘(4)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(6)</a> <a href='/blog/categories/杂项' style='font-size: 120.0%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 110.0%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 140.0%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 110.0%'>编程语言(1)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 108.57142857142857%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 108.57142857142857%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 125.71428571428572%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 142.85714285714286%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(7)</a> <a href='/blog/categories/杂项' style='font-size: 117.14285714285714%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 108.57142857142857%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 134.28571428571428%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 108.57142857142857%'>编程语言(1)</a> </span>
 </section>
 
   

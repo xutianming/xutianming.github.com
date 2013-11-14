@@ -102,8 +102,8 @@
 <ol>
 <li>利用提供的文本数据进行文本分类。其中包括了利用lucene的IKAnalyzer进行分词、利用Chi-square进行特征选择、利用tf-idf作为权重生成文本的向量表示形式、利用Liblinear进行线性核的分类。第一次准确率87%。由于以上工作都是在Hadoop上完成的，加上学习和适应Hadoop平台的时间，其实只要一天的工作量的事情，做了2周（比赛承办方提供的Hadoop集群的限制实在是太多了）。</li>
 <li>利用一些人工制定的规则，挖掘一些有着高区分度的词，利用这些词去修正上述文本分类的结果。这一步，把准确率提高到了88.5%。这也是我们最好的成绩了，本来可以利用这种方法获得更多的准确率的提升的，但是感觉可学习的东西很多，不想把更多的时间放在对数据的理解上。</li>
-<li>利用关键词的用户购买信息去做关键词分类。这样做是建立在“购买关键词的用户相似，那么关键词倾向于属于同一类”这一假设的基础上的。所以想对&lt;关键词-用户>矩阵，应用分类算法。这一矩阵存在着维度过高（600w维）和过于稀疏的问题（很少有两个用户买同一个关键字）。所以推断直接分类既不可行，效果也不好。</li>
-<li>这一条详细讲一下用户矩阵的使用。首先想到的是对用户聚类，使用k-means。但是由于上面所说的稀疏性问题，所以聚类效果也不好。于是想到利用第一次文本分类的结果，补充训练数据，另外首先对用户聚类（已经聚好了，33类），这样&lt;用户-关键词>矩阵维度33维，并且不稀疏。可以使用k-means对用户进行聚类了，分别制定k为100和1000，进行聚类。在使用的过程中，发现了一个问题，k-means一般是基于距离的，而在这个项目的用户中，和质心距离相等的两个点，并不一定相同，距离计算过程中把所有的维度（关键词类别）等同看待，而现实中，我们购买了不同维度（类别）的关键词的用户，虽然距离相等，但是是属于不同类的。基于上述思考，我放弃了使用k-means，按照自己的想法，对用户进行了聚类。得到了2w类左右的用户。用户聚类之后，就达到了对&lt;关键词-用户>矩阵的降维和去稀疏的目的。可以应用分类算法了。</li>
+<li>利用关键词的用户购买信息去做关键词分类。这样做是建立在“购买关键词的用户相似，那么关键词倾向于属于同一类”这一假设的基础上的。所以想对&lt;关键词-用户>向量，应用分类算法。这一矩阵存在着维度过高（600w维）和过于稀疏的问题（很少有两个用户买同一个关键字）。所以推断直接分类既不可行，效果也不好。</li>
+<li>这一条详细讲一下用户矩阵的使用。首先想到的是对用户聚类，以降低&lt;关键词-用户>向量的维度和稀疏性，使用k-means。但是由于上面所说的稀疏性问题，所以聚类效果也不好。于是想到利用第一次文本分类的结果，补充训练数据，另外首先对关键词聚类（已经聚好了，33类），这样&lt;用户-关键词>向量维度33维，并且不稀疏。可以使用k-means对用户进行聚类了，分别制定k为100和1000，进行聚类。在使用的过程中，发现了一个问题，k-means一般是基于距离的，而在这个项目的用户中，和质心距离相等的两个点，并不一定相同，距离计算过程中把所有的维度（关键词类别）等同看待，而现实中，我们购买了不同维度（类别）的关键词的用户，虽然距离相等，但是是属于不同类的。基于上述思考，我放弃了使用k-means，按照自己的想法，对用户进行了聚类。得到了2w类左右的用户。用户聚类之后，就达到了对&lt;关键词-用户>矩阵的降维和去稀疏的目的。可以应用分类算法了。</li>
 <li>利用上述的方法，利用用户对关键词分类。但是结果非常不理想。原因在于，我们在第3步里的假设是不对的。也就是说，假如几个关键词，被几个相同或者相似的用户购买，并不代表关键词属于同一类。分析bad case可以看出，比如公司转让，服装公司转让被分入了服装类，房地产公司转让被分入了房地产类。但是这些关键词应该是被一个公司转让中介性质的用户购买了。所以从用户角度去分类，是不可行的。</li>
 <li>经过上面的尝试，时间已经过去了3周。我们放弃了使用用户购买信息，试图提高文本分类的效果。首先我们发现，需要利用多词模式去提高特征质量，比如，搬家是个特征词，公司不是，但是搬家公司，是个非常有区分度的特征。由于没有事先的积累，也找不到现成的工具，我们自己根据经验和对数据的理解，写了bi-gram和tri-gram的map-reduce组合算法。使用频率对多词模式进行筛选，然后加入特征集训练。这一步，问题很多，因为大部分是拍脑袋定的，感觉很不科学，接下来，我可能会对这方面做一些针对性的阅读。</li>
 <li>重复了文本分类的步骤，做了第二版的分类器，但是由于多词模式的筛选和使用都有些问题，所以这一版分类器没有取得预期的进步。</li>
@@ -160,6 +160,8 @@
         <a class="basic-alignment left" href="/blog/2013/10/29/mapreduce-program-trial/" title="Previous Post: MapReduce初试">&laquo; MapReduce初试</a>
       
       
+        <a class="basic-alignment right" href="/blog/2013/11/14/text-classification-step-by-step2/" title="Next Post: 行业关键词分类整理2">行业关键词分类整理2 &raquo;</a>
+      
     </p>
   </footer>
 </article>
@@ -176,11 +178,15 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (4)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (6)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (7)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/text-classification-step-by-step2/">行业关键词分类整理2</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/11/14/text-classification-step-by-step/">行业关键词分类项目总结1</a>
@@ -196,10 +202,6 @@
     
       <li class="post">
         <a href="/blog/2013/09/24/summary-of-wikivis-project-2/">知识可视化项目第一阶段总结2</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/23/summary-of-knowledge-visualization-project-stage-1/">知识可视化项目第一阶段小结</a>
       </li>
     
   </ul>
@@ -239,7 +241,7 @@
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 110.0%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 110.0%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 130.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 140.0%'>文本挖掘(4)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(6)</a> <a href='/blog/categories/杂项' style='font-size: 120.0%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 110.0%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 140.0%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 110.0%'>编程语言(1)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 108.57142857142857%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 108.57142857142857%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 125.71428571428572%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 142.85714285714286%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(7)</a> <a href='/blog/categories/杂项' style='font-size: 117.14285714285714%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 108.57142857142857%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 134.28571428571428%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 108.57142857142857%'>编程语言(1)</a> </span>
 </section>
 
   

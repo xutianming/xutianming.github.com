@@ -9,7 +9,7 @@
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="最近在做ACM的练习题来练习编程的基本功，今天研究到了递归问题。就是通过寻找递推公式，来解决问题。 在总结方法的过程中，发现，对于一些比较简单的题目，可以在纸上比较轻易的模拟过程的问题，可以通过观察第n项与前面的1-3项之间的关系，直接得到递推公式。 比如： 超级楼梯 一只小蜜蜂&hellip; &hellip;">
+  <meta name="description" content="上星期阅读了《Interactive Data Visualization for the Web》一书之后，便开始尝试使用D3js了。以前一直没怎么写过前端和界面，个人对于坐标位置布局什么的相当没感觉，总是乱乱的。所以这次写来，大部分也都是用的别人写好的现成的东西，在这个基础上做些改动。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,66 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/">为控件增加鼠标悬浮提示</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-26T14:21:00+08:00" pubdate data-updated="true">Aug 26<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>上星期阅读了《Interactive Data Visualization for the Web》一书之后，便开始尝试使用D3js了。以前一直没怎么写过前端和界面，个人对于坐标位置布局什么的相当没感觉，总是乱乱的。所以这次写来，大部分也都是用的别人写好的现成的东西，在这个基础上做些改动。</p>
+
+<p>今天做的改动之一就是为标签Text增加鼠标悬浮事件，提示改概念的定义。</p>
+
+<p>效果图如下：</p>
+
+<p><img src="http://i.imgur.com/0E53nrC.jpg" alt="Imgur" /></p>
+
+<p>这段代码参考了StackOverflow上的这个<a href="http://stackoverflow.com/questions/10805184/d3-show-data-on-mouseover-of-circle">帖子</a></p>
+
+<pre><code>// Show defination of the current item
+function show_defination(d) {
+    d3.select(this)
+        .append("svg:title")
+        .text(function(d) {return d.def;})
+        .attr("x",function(d) {return d.x+10;})
+        .attr("y",function(d) {return d.y+10;})
+}
+</code></pre>
+
+<p>我添加的代码如上，绑定在text控件的mouseover时间上。<code>on("mouseover",show_defination);</code></p>
+
+<p>另外我还发现了一个很好的在线校验json的<a href="http://jsonlint.com/">网站</a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -647,11 +707,15 @@ C++:    cout &lt;&lt; ans &lt;&lt; endl &lt;&lt; endl;
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (4)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (6)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (7)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (1)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/text-classification-step-by-step2/">行业关键词分类整理2</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/11/14/text-classification-step-by-step/">行业关键词分类项目总结1</a>
@@ -667,10 +731,6 @@ C++:    cout &lt;&lt; ans &lt;&lt; endl &lt;&lt; endl;
     
       <li class="post">
         <a href="/blog/2013/09/24/summary-of-wikivis-project-2/">知识可视化项目第一阶段总结2</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/23/summary-of-knowledge-visualization-project-stage-1/">知识可视化项目第一阶段小结</a>
       </li>
     
   </ul>
@@ -710,7 +770,7 @@ C++:    cout &lt;&lt; ans &lt;&lt; endl &lt;&lt; endl;
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 110.0%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 110.0%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 130.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 140.0%'>文本挖掘(4)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(6)</a> <a href='/blog/categories/杂项' style='font-size: 120.0%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 110.0%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 140.0%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 110.0%'>编程语言(1)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 108.57142857142857%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 108.57142857142857%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 125.71428571428572%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 142.85714285714286%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(7)</a> <a href='/blog/categories/杂项' style='font-size: 117.14285714285714%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 108.57142857142857%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 134.28571428571428%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 108.57142857142857%'>编程语言(1)</a> </span>
 </section>
 
   
