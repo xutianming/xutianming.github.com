@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>行业关键词分类项目总结1 - Xutianming Blog</title>
+  <meta name="author" content="Xutianming">
+
+  
+  <meta name="description" content="在过去的一个月里，完成了一个行业关键词分类的项目，100w的训练数据，1000w的测试数据，33个分类。项目期限已经到了，但是我们的准确率目前只有88%，尝试了很多方法，遇到很多困难，也走过弯路。 项目结束并且效果不好，自然要寻找原因。一方面是等待比赛完全结束，公布冠军的解决方法，来开阔下眼界； &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://xutianming.github.io/blog/2013/11/14/text-classification-step-by-step">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Xutianming Blog" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Xutianming Blog</a></h1>
+  
+    <h2>www.cnblogs.com/iteagle</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:xutianming.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">行业关键词分类项目总结1</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-14T10:24:00+08:00" pubdate data-updated="true">Nov 14<span>th</span>, 2013</time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>在过去的一个月里，完成了一个行业关键词分类的项目，100w的训练数据，1000w的测试数据，33个分类。项目期限已经到了，但是我们的准确率目前只有88%，尝试了很多方法，遇到很多困难，也走过弯路。</p>
+
+<p>项目结束并且效果不好，自然要寻找原因。一方面是等待比赛完全结束，公布冠军的解决方法，来开阔下眼界；另一方面就是更广泛的读一些相关的资料，做一些在项目过程中没有精力去做的阅读和学习工作。</p>
+
+<p>首先简单描述下项目的过程。这次项目提供了33个分类，和一些要分类的关键词。每个关键词，提供了10个搜索引擎的自然排序的结果，以及购买这些关键词的用户。一部分已经标注的训练数据，和大量要分类的测试数据，分类效果的评估用的是宏平均(Macro-average)准确率。接下来，我们做了如下尝试：</p>
+
+<ol>
+<li>利用提供的文本数据进行文本分类。其中包括了利用lucene的IKAnalyzer进行分词、利用Chi-square进行特征选择、利用tf-idf作为权重生成文本的向量表示形式、利用Liblinear进行线性核的分类。第一次准确率87%。由于以上工作都是在Hadoop上完成的，加上学习和适应Hadoop平台的时间，其实只要一天的工作量的事情，做了2周（比赛承办方提供的Hadoop集群的限制实在是太多了）。</li>
+<li>利用一些人工制定的规则，挖掘一些有着高区分度的词，利用这些词去修正上述文本分类的结果。这一步，把准确率提高到了88.5%。这也是我们最好的成绩了，本来可以利用这种方法获得更多的准确率的提升的，但是感觉可学习的东西很多，不想把更多的时间放在对数据的理解上。</li>
+<li>利用关键词的用户购买信息去做关键词分类。这样做是建立在“购买关键词的用户相似，那么关键词倾向于属于同一类”这一假设的基础上的。所以想对&lt;关键词-用户>矩阵，应用分类算法。这一矩阵存在着维度过高（600w维）和过于稀疏的问题（很少有两个用户买同一个关键字）。所以推断直接分类既不可行，效果也不好。</li>
+<li>这一条详细讲一下用户矩阵的使用。首先想到的是对用户聚类，使用k-means。但是由于上面所说的稀疏性问题，所以聚类效果也不好。于是想到利用第一次文本分类的结果，补充训练数据，另外首先对用户聚类（已经聚好了，33类），这样&lt;用户-关键词>矩阵维度33维，并且不稀疏。可以使用k-means对用户进行聚类了，分别制定k为100和1000，进行聚类。在使用的过程中，发现了一个问题，k-means一般是基于距离的，而在这个项目的用户中，和质心距离相等的两个点，并不一定相同，距离计算过程中把所有的维度（关键词类别）等同看待，而现实中，我们购买了不同维度（类别）的关键词的用户，虽然距离相等，但是是属于不同类的。基于上述思考，我放弃了使用k-means，按照自己的想法，对用户进行了聚类。得到了2w类左右的用户。用户聚类之后，就达到了对&lt;关键词-用户>矩阵的降维和去稀疏的目的。可以应用分类算法了。</li>
+<li>利用上述的方法，利用用户对关键词分类。但是结果非常不理想。原因在于，我们在第3步里的假设是不对的。也就是说，假如几个关键词，被几个相同或者相似的用户购买，并不代表关键词属于同一类。分析bad case可以看出，比如公司转让，服装公司转让被分入了服装类，房地产公司转让被分入了房地产类。但是这些关键词应该是被一个公司转让中介性质的用户购买了。所以从用户角度去分类，是不可行的。</li>
+<li>经过上面的尝试，时间已经过去了3周。我们放弃了使用用户购买信息，试图提高文本分类的效果。首先我们发现，需要利用多词模式去提高特征质量，比如，搬家是个特征词，公司不是，但是搬家公司，是个非常有区分度的特征。由于没有事先的积累，也找不到现成的工具，我们自己根据经验和对数据的理解，写了bi-gram和tri-gram的map-reduce组合算法。使用频率对多词模式进行筛选，然后加入特征集训练。这一步，问题很多，因为大部分是拍脑袋定的，感觉很不科学，接下来，我可能会对这方面做一些针对性的阅读。</li>
+<li>重复了文本分类的步骤，做了第二版的分类器，但是由于多词模式的筛选和使用都有些问题，所以这一版分类器没有取得预期的进步。</li>
+<li>时间到了最后一周，感觉也没有什么特别好的点子了。偶然之中发现了Multi-class 分类相关的知识，比如one-vs-rest，one-vs-one等等。以为发现了新的方法，于是我们用Hadoop又做了一个one-vs-rest的多类分布式分类器，主要的思路是参考的别人的，花了很多时间去读别人的代码以及了解liblinear的各项接口和参数。这段时间算是对SVM和Hadoop编程有了更进一步的知识。无奈，最终发现，其实本来Liblinear做多类分类，就是用的one-vs-rest。而且我们的分类器，最终效果也不好。</li>
+</ol>
+
+
+<p>这就是过去一个月中，我们进行的所有工作。学到了很多知识，对SVM，NB分类器，对Hadoop的java接口和Streaming以及map-reduce的思想都有了进一步的认识，并且可以顺利使用了。虽然最终结果并不好，但是对于缺乏经验的我们来说，算是一个很好的经历。下篇文章里，我再结合一些书本上的知识，讲一些关于这个项目的思考，和可能的改进方向。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Xutianming</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-11-14T10:24:00+08:00" pubdate data-updated="true">Nov 14<span>th</span>, 2013</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/wen-ben-wa-jue/'>文本挖掘</a>, <a class='category' href='/blog/categories/ji-qi-xue-xi/'>机器学习</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/11/14/text-classification-step-by-step/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/11/14/text-classification-step-by-step/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2013/10/29/mapreduce-program-trial/" title="Previous Post: MapReduce初试">&laquo; MapReduce初试</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Categories</h1>
+    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (4)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (6)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (1)</a></li></ul>
+</section>
+<section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/11/14/text-classification-step-by-step/">行业关键词分类项目总结1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/10/29/mapreduce-program-trial/">MapReduce初试</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/09/28/hadoop-first-trial/">Hadoop环境搭建小结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/09/24/summary-of-wikivis-project-2/">知识可视化项目第一阶段总结2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/09/23/summary-of-knowledge-visualization-project-stage-1/">知识可视化项目第一阶段小结</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating...</li>
+  </ul>
+  
+  <a href="https://github.com/xutianming">@xutianming</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'xutianming',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+<section>
+  <h1>Tag Cloud</h1>
+    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 110.0%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 110.0%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 130.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 140.0%'>文本挖掘(4)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(6)</a> <a href='/blog/categories/杂项' style='font-size: 120.0%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 110.0%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 140.0%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 110.0%'>编程语言(1)</a> </span>
+</section>
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Xutianming -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'xutianming';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://xutianming.github.io/blog/2013/11/14/text-classification-step-by-step/';
+        var disqus_url = 'http://xutianming.github.io/blog/2013/11/14/text-classification-step-by-step/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
