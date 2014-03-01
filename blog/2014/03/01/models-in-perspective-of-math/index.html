@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>为控件增加鼠标悬浮提示 - Xutianming Blog</title>
+  <title>模型学习小结 - Xutianming Blog</title>
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="上星期阅读了《Interactive Data Visualization for the Web》一书之后，便开始尝试使用D3js了。以前一直没怎么写过前端和界面，个人对于坐标位置布局什么的相当没感觉，总是乱乱的。所以这次写来，大部分也都是用的别人写好的现成的东西，在这个基础上做些改动。 &hellip;">
+  <meta name="description" content="近来我对机器学习的模型有了一些更接近本质的认识。也让机器学习的这些理论，在我的眼里，变得不那么神秘。 机器学习的理论，可以分为两个部分，一部分是建模，一部分是求解模型。所有的机器学习算法，逻辑斯蒂回归、支持向量机，本质上来讲，都是一套建模的方法和一套可行有效的解法。 建模，从数学的角度， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3">
+  <link rel="canonical" href="http://xutianming.github.io/blog/2014/03/01/models-in-perspective-of-math">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Xutianming Blog" type="application/atom+xml">
@@ -68,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">为控件增加鼠标悬浮提示</h1>
+      <h1 class="entry-title">模型学习小结</h1>
     
     
       <p class="meta">
@@ -84,7 +84,7 @@
   
 
 
-<time datetime="2013-08-26T14:21:00+08:00" pubdate data-updated="true">Aug 26<span>th</span>, 2013</time>
+<time datetime="2014-03-01T22:16:00+08:00" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -93,29 +93,15 @@
   </header>
 
 
-<div class="entry-content"><p>上星期阅读了《Interactive Data Visualization for the Web》一书之后，便开始尝试使用D3js了。以前一直没怎么写过前端和界面，个人对于坐标位置布局什么的相当没感觉，总是乱乱的。所以这次写来，大部分也都是用的别人写好的现成的东西，在这个基础上做些改动。</p>
+<div class="entry-content"><p>近来我对机器学习的模型有了一些更接近本质的认识。也让机器学习的这些理论，在我的眼里，变得不那么神秘。</p>
 
-<p>今天做的改动之一就是为标签Text增加鼠标悬浮事件，提示改概念的定义。</p>
+<p>机器学习的理论，可以分为两个部分，一部分是建模，一部分是求解模型。所有的机器学习算法，逻辑斯蒂回归、支持向量机，本质上来讲，都是一套建模的方法和一套可行有效的解法。</p>
 
-<p>效果图如下：</p>
+<p>建模，从数学的角度，是对实际问题的描述。比如逻辑斯蒂回归利用逻辑斯蒂分布的特殊性质建模，也就是odds ratio为线性函数。而odds ratio是本sample为正例和负例的概率的比值的log。这样odds ratio的正负，可以代表本sample为正例的概率大还是为负例的概率大。而odds ratio的正负，就是线性函数的正负。因此有了逻辑斯蒂回归。建模的任务是描述问题，并得出目标函数，也即是Loss Function。Loss Function经常利用极大似然估计（Max likelyhood）和最小平方误差（Least squares）写出。支持向量机也是如此，支持向量机的建模过程中，认为sample到分类超平面的距离，衡量分类的置信程度。那么定义符合要求的分类超平面为，数据集中所有的点，到本分类超平面的距离，都大于等于R。然后极大化R，得到目标函数。</p>
 
-<p><img src="http://i.imgur.com/0E53nrC.jpg" alt="Imgur" /></p>
+<p>得到目标函数之后，就要求目标函数的极值。数学里的最优化问题，有非常多的方法。常见的有梯度下降法、牛顿法、拟牛顿法。理论上来讲，求解和建模是独立和分开的，也就是说，上面建模得到的目标函数，可以用任意一种最优化解法来解。当然这只是最理想的情况。实践中，每一种模型（目标函数），几乎都对应了一种实际可行的，可计算的解法。</p>
 
-<p>这段代码参考了StackOverflow上的这个<a href="http://stackoverflow.com/questions/10805184/d3-show-data-on-mouseover-of-circle">帖子</a></p>
-
-<pre><code>// Show defination of the current item
-function show_defination(d) {
-    d3.select(this)
-        .append("svg:title")
-        .text(function(d) {return d.def;})
-        .attr("x",function(d) {return d.x+10;})
-        .attr("y",function(d) {return d.y+10;})
-}
-</code></pre>
-
-<p>我添加的代码如上，绑定在text控件的mouseover时间上。<code>on("mouseover",show_defination);</code></p>
-
-<p>另外我还发现了一个很好的在线校验json的<a href="http://jsonlint.com/">网站</a></p>
+<p>从这种比较高层次的角度，再去读那些机器学习的书籍，会更加从容，应该可以把握的更好。</p>
 </div>
 
 
@@ -138,12 +124,12 @@ function show_defination(d) {
   
 
 
-<time datetime="2013-08-26T14:21:00+08:00" pubdate data-updated="true">Aug 26<span>th</span>, 2013</time>
+<time datetime="2014-03-01T22:16:00+08:00" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/codesegment/'>CodeSegment</a>, <a class='category' href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化</a>
+    <a class='category' href='/blog/categories/ji-qi-xue-xi/'>机器学习</a>
   
 </span>
 
@@ -152,7 +138,7 @@ function show_defination(d) {
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2014/03/01/models-in-perspective-of-math/" data-via="" data-counturl="http://xutianming.github.io/blog/2014/03/01/models-in-perspective-of-math/" >Tweet</a>
   
   
   
@@ -161,10 +147,8 @@ function show_defination(d) {
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/08/20/recursion-problem-and-hmm-model/" title="Previous Post: ACM中递归问题解决方法思考">&laquo; ACM中递归问题解决方法思考</a>
+        <a class="basic-alignment left" href="/blog/2014/03/01/java-reference-and-value-parameter/" title="Previous Post: Java值传递和引用传递">&laquo; Java值传递和引用传递</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/09/02/dynamic-programming/" title="Next Post: 动态规划">动态规划 &raquo;</a>
       
     </p>
   </footer>
@@ -267,8 +251,8 @@ function show_defination(d) {
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/';
-        var disqus_url = 'http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/';
+        var disqus_identifier = 'http://xutianming.github.io/blog/2014/03/01/models-in-perspective-of-math/';
+        var disqus_url = 'http://xutianming.github.io/blog/2014/03/01/models-in-perspective-of-math/';
         var disqus_script = 'embed.js';
       
     (function () {

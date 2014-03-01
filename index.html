@@ -9,7 +9,7 @@
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="在上一篇博客里，详细讲述了项目的具体过程。项目结束之后，从昨天开始，我就开始着手去查看一些资料，整理思路，看看项目的过程中，哪些是有理论依据、切实可行；哪些只是基于个人经验的推论，可能存在很多的纰漏。从而能找到一些提高的可能性，同时也梳理一下整体的思路，在以后遇到问题的时候，可以有的放矢。 &hellip;">
+  <meta name="description" content="近来我对机器学习的模型有了一些更接近本质的认识。也让机器学习的这些理论，在我的眼里，变得不那么神秘。 机器学习的理论，可以分为两个部分，一部分是建模，一部分是求解模型。所有的机器学习算法，逻辑斯蒂回归、支持向量机，本质上来讲，都是一套建模的方法和一套可行有效的解法。 建模，从数学的角度， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,144 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/01/models-in-perspective-of-math/">模型学习小结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-01T22:16:00+08:00" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
+        
+         | <a href="/blog/2014/03/01/models-in-perspective-of-math/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>近来我对机器学习的模型有了一些更接近本质的认识。也让机器学习的这些理论，在我的眼里，变得不那么神秘。</p>
+
+<p>机器学习的理论，可以分为两个部分，一部分是建模，一部分是求解模型。所有的机器学习算法，逻辑斯蒂回归、支持向量机，本质上来讲，都是一套建模的方法和一套可行有效的解法。</p>
+
+<p>建模，从数学的角度，是对实际问题的描述。比如逻辑斯蒂回归利用逻辑斯蒂分布的特殊性质建模，也就是odds ratio为线性函数。而odds ratio是本sample为正例和负例的概率的比值的log。这样odds ratio的正负，可以代表本sample为正例的概率大还是为负例的概率大。而odds ratio的正负，就是线性函数的正负。因此有了逻辑斯蒂回归。建模的任务是描述问题，并得出目标函数，也即是Loss Function。Loss Function经常利用极大似然估计（Max likelyhood）和最小平方误差（Least squares）写出。支持向量机也是如此，支持向量机的建模过程中，认为sample到分类超平面的距离，衡量分类的置信程度。那么定义符合要求的分类超平面为，数据集中所有的点，到本分类超平面的距离，都大于等于R。然后极大化R，得到目标函数。</p>
+
+<p>得到目标函数之后，就要求目标函数的极值。数学里的最优化问题，有非常多的方法。常见的有梯度下降法、牛顿法、拟牛顿法。理论上来讲，求解和建模是独立和分开的，也就是说，上面建模得到的目标函数，可以用任意一种最优化解法来解。当然这只是最理想的情况。实践中，每一种模型（目标函数），几乎都对应了一种实际可行的，可计算的解法。</p>
+
+<p>从这种比较高层次的角度，再去读那些机器学习的书籍，会更加从容，应该可以把握的更好。</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/01/java-reference-and-value-parameter/">Java值传递和引用传递</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-01T21:25:00+08:00" pubdate data-updated="true">Mar 1<span>st</span>, 2014</time>
+        
+         | <a href="/blog/2014/03/01/java-reference-and-value-parameter/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>网上一搜Java引用传递，会出来很多博客，会举出好多例子来说明Java的引用传递。当然有一小部分博客说，Java是没有引用传递的。最近在做项目的过程中，我也遇到了这些问题，看这些中文博客更是一头雾水。只有经过了自己的实践，才有了可以让自己信服的结论：</p>
+
+<p>Java里没有在C++意义上的那种引用传递，全是值传递。只是在Java中，对象分为基本类型和引用类型。典型的基本类型，包含所有的基本类型（primitive）；而对象等高级类型，属于引用类型。基本类型作为参数传递的时候，就是普通意义上的值传递，没啥争论，而引用类型作为参数的时候，传递的是本对象的引用的值。所以一概是值传递，而没有C++意义上的引用传递。下面也用代码来说明。</p>
+
+<pre><code>public void setA(ArrayList&lt;Double&gt; a) {
+    ArrayList&lt;Double&gt; b = new ArrayList&lt;Double&gt;();
+    b.add(2.0);
+    a.add(4.0);
+    a=new ArrayList&lt;Double&gt;(b);
+    a.add(3.0);
+}
+</code></pre>
+
+<p>上面这段代码，运行之后，a里面只多了4.0。也就是说，只有<code>a.add(4.0)</code>起了作用。按照我们上面的理论，a是原数组的一个引用，指向原数组。那么<code>a.add(4.0)</code>自然可以影响到原数组。下面的<code>new ArrayList</code>语句，改变了a的指向，a指向一个新的数组。这时候再<code>a.add(3.0)</code>就是影响的新建的这个数组了。函数调用结束，a被还原指向原来的数组（这就是值传递的机制，原来数组的引用在函数调用之前保存在堆栈中，复制一份作为函数参数传递进去，函数调用结束恢复）。所以运行之后，a里只有4.0。</p>
+
+<p>那么什么是引用传递呢。其实这是C++里的概念，就是传递的是引用。同样的代码用C++写。</p>
+
+<pre><code>void setA(vector&lt;double&gt; a) {
+    a.push_back(1.0);
+    vector&lt;double&gt; b;
+    b.add(2.0);
+    a=b;
+}
+int main() {
+    vector&lt;double&gt; a;
+    setA(a);
+    cout&lt;&lt;a.size()&lt;&lt;endl;
+    return 0;
+}
+</code></pre>
+
+<p>在这段代码里不论setA里做什么，a都不变。因为是值传递。那么C++的引用传递是什么呢？</p>
+
+<pre><code>void setA(vector&lt;double&gt; &amp;a) {
+    a.push_back(1.0);
+    vector&lt;double&gt; b;
+    a=b;
+}
+
+int main() {
+    vector&lt;double&gt; a;
+    a.add(1.0);
+    setA(a);
+    cout&lt;&lt;a.size()&lt;&lt;endl;
+    return 0;
+}
+</code></pre>
+
+<p>这样就能改变a的值了。</p>
+
+<p>最后附上我所说的结论的证明。</p>
+
+<p><a href="http://stackoverflow.com/questions/40480/is-java-pass-by-reference">http://stackoverflow.com/questions/40480/is-java-pass-by-reference</a></p>
+
+<p>Java中的reference type 和 C++中的reference type是指的不同的东西的，在Java中，引用类型指的是Java对某一系列类型的处理方式，而在C++中，引用类型是一种切实的类型，和指针一样，可以与其他类型组合出一些复合类型。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -601,132 +739,6 @@ if __name__ == '__main__':
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/09/14/chi-square-information-gain-and-mutual-information/">卡方校验、信息增益和互信息</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-09-14T20:51:00+08:00" pubdate data-updated="true">Sep 14<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/09/14/chi-square-information-gain-and-mutual-information/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>从一开始做文本分类到现在做的项目，一直在不断的学习新的知识，练习已经掌握的工具，也越来越深刻的认识到，“你所掌握的机器学习方法，并不是死板的一成不变的算法，而是一个一个的小工具，是解决问题的思路”。</p>
-
-<p>这篇博客将对比三个在我进行文本挖掘相关工作的时候经常用到的小工具，以及我对他们的认识，仅限个人的粗浅观点，也是我当前的认识，不见得正确。</p>
-
-<p><a href="http://zh.wikipedia.org/wiki/%E7%9A%AE%E7%88%BE%E6%A3%AE%E5%8D%A1%E6%96%B9%E6%AA%A2%E5%AE%9A">卡方校验</a></p>
-
-<p>首先理解卡方校验的概念，除了维基百科，我总会看<a href="http://www.blogjava.net/zhenandaci/archive/2008/08/31/225966.html">这篇博客</a>。简单来讲，卡方校验是用来判别两个事件是否相关的方法，因此在特征提取、关键词提取中都有很多的应用。基本思路是，首先假设A、B不相关，然后根据A和B的联合概率分布，计算卡方值，公式在定义中都有给出，卡方值越大，越倾向于推翻原假设，也就是A、B越相关。在计算卡方值的过程中，最关键的问题是找到联合概率分布。那么我们应该如何理解卡方值呢？卡方值的含义其实是这样的，我们首先假设A、B不相关，也就是AB相互独立，那么我们可以为联合概率分布中的AB同时成立的事件计算期望值，根据定义公式显示，卡方值是这个期望值和实际值之间的差的平方除以期望值的和（定义和方差很像！），衡量了这两个量拟合的程度。那么，卡方值越大，代表期望值和实际值之间的差越大，也就是我们计算期望值所依赖的假设，是不成立的！</p>
-
-<p>当我们想用卡方检验的方法，去判断两个事件是否相关的时候，理解问题的过程，就是建立事件A、B联合概率分布的过程，找到这个概率分布，就可以计算卡方值。举例说明的话，在文本分类的特征提取这一步，事件A是特征词w是否存在在本篇文档中，事件B是本篇文档是否属于类c。首先假设“w不是类c的特征词”，那么词w在属于类c的所有文档中出现的概率，应当与w在全部文档中出现的概率相同，我们依据这一假设，可以算出w出现在c类的文档数的期望，用期望值和实际值的差的平方除以作为卡方值。</p>
-
-<p><a href="http://zh.wikipedia.org/wiki/%E7%9B%B8%E5%AF%B9%E7%86%B5">信息增益</a></p>
-
-<p>也经常作为特征提取的方法，也用来衡量两个事件的相关性，但是是从信息论的角度来的。信息论用熵来衡量信息量。信息增益，简单理解就是在已知条件B的情况下，事件A的信息量的改变程度，就是熵的改变程度。同样有<a href="http://www.blogjava.net/zhenandaci/archive/2009/03/24/261701.html">一篇博客</a>讲得很透彻。从上面的描述可以看出，计算信息增益的关键是计算熵和条件熵。所以说，信息增益对应的概率分布，是普通的概率分布和一个条件概率分布。那么我们应该如何具体理解信息增益呢？我们首先计算事件A的信息熵，然后考虑事件B，计算在有事件B的情况下的条件熵，两者之差，就是信息熵的改变，改变越大，说明事件B对于事件A的相关性越大。由于涉及到信息论，所以信息量改变这一点，就变的略显抽象。</p>
-
-<p>仿照上文中对卡方校验的介绍。利用信息增益解决问题的关键，在于找到这个条件概率分布，以计算条件熵。同样举文本分类中特征提取这个例子。事件A是指文档属于类ci，事件B是词w是否出现在文档中。根据P(Ci|w)和P(Ci|^w)这两个条件概率分布，可以计算条件熵H(C|T)。</p>
-
-<p>不过仔细读过信息增益的概念，发现我们上面介绍的和KL散度差别挺大的，目前我也不能理解这两种概念是否本质上相同，但是在分类和挖掘领域，大家一般是像我说的那样去理解信息增益的。</p>
-
-<p><a href="http://zh.wikipedia.org/wiki/%E4%BA%92%E4%BF%A1%E6%81%AF">互信息</a></p>
-
-<p>在互信息定义的多条公式中，我一般使用第三个，就是X，Y熵之和减去联合熵。根据联合熵，就可以发现，决定互信息的，也是一个联合概率分布。</p>
-
-<p>比较形象的理解互信息的公式方法是，认为事件X和事件Y相关，可以让总信息熵减少多少，差别越大，X和Y越相关。计算互信息的关键，是计算联合熵，因此在用互信息解决问题的适合，找到这个联合概率分布，是核心。不要试图去寻找其他的概率分布，实践表明，互信息的联合概率分布与卡方检验的非常相似，都是x是否怎样，y是否怎样。同样以文本分类为例，X为文档是否属于类c，Y事件为文档是否包含w，然后利用这个概率分布去计算联合熵。这么一看，和卡方检验几乎完全相同！只是利用了不同的理论基础。</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/09/02/dynamic-programming/">动态规划</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-09-02T19:53:00+08:00" pubdate data-updated="true">Sep 2<span>nd</span>, 2013</time>
-        
-         | <a href="/blog/2013/09/02/dynamic-programming/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>当遇到复杂问题的时候，我们很自然的想要降低问题的复杂度和规模。在《算法导论》中，作者将动态规划和分治算法都当做降低问题规模，将复杂问题转化为子问题的方法。不同的是，分治算法划分出的子问题都是独立的，而动态规划中的子问题相互之间是非独立的，高层的子问题（离原问题比较近）往往依赖于低层子问题。所以假如不利用动态规划，自底向上计算这类问题的时候，会有大量重复的计算，从而使算法的效率低。</p>
-
-<p>那么，动态规划的本质就是建立一个表，存储子问题的结果，在计算高层问题的时候，直接利用表中的结果。这就是动态规划的基本思想。动态规划往往被用来计算最优化问题，利用的理论是子问题最优化理论，也就是一个最优化解的路径上的所有子问题，也都是当前最优化的。但是，这已经不是动态规划的核心了，我之前就在理解动态规划的时候，犯了这个错误。在试图利用动态规划去解决问题的时候，我往往纠结于去寻找这样的最优化子结构。其实有时候，这种最优化子结构并不好找甚至没有，但是也可以利用动态规划去解。动态规划的基本思想，还是很朴素的。</p>
-
-<p>最近在TopCoder上读了一个黄名大牛写的<a href="http://www.topcoder.com/tc?d1=tutorials&amp;d2=dynProg&amp;module=Static">动态规划进阶手册</a>深受启发。文中指出，动态规划应该这么描述：动态规划算法往往建立在一个递归方程和这个方程的初始状态之上（很像那种找递推公式的问题）。每个子问题，都建立在之前发现并计算好的问题上。动态规划问题往往都有多项式级别的复杂度，因此比暴力搜索和回溯算法效率要高（这一点我还不是特别明白，文中有提出，多项式复杂度的问题都可以用动态规划来解决）。</p>
-
-<p>动态规划问题的解决过程是分为两步：定义问题的状态（或者说是子问题），发现如何又一个状态转移到下一个状态（也就是定义状态转移方程，是上文指出的“递归方程”），更准确的说，如何利用已有的子状态，计算下一个状态，因为有时候不是从i转移到i+1。</p>
-
-<p>举例说明：</p>
-
-<p>给定N个硬币，价值分别为（v1，v2，v3&hellip;vN），给定价值和S。求解价值和为S的硬币集合，使其包含的硬币个数最少，每种价值的硬币可以使用任意多个。</p>
-
-<p>问题分析：</p>
-
-<p>在这个问题中我们要求解的结果是价值和S，那么定义“状态”为当前价值和为i（i&lt;S），对于所有的状态j（j>i），要利用i来求解，而对于状态j(j&lt;i)，要在计算状态i之前计算好。在实践中，我发现子状态往往是针对要求解的那个问题的。</p>
-
-<p>对于状态i，我们假设，所有的子状态j（j&lt;i）都已经计算出结果来了。那么i如何利用子结果来计算。对于所有价值小于i 的硬币（循环遍历）j，使用此硬币，使价值和变为i-j，由于i-j&lt;i，那么此子问题，我们应该已经计算好了，假设硬币数为m，则i状态的结果应为m+1。遍历过程中，我们把最小的那个结果存给状态i。</p>
-
-<p>基于这种想法，我们需要从状态0开始，到状态s逐一计算。也就是动态规划中所谓的，从顶向下思考，从底向上计算。这里有个思考陷阱，千万不要想如何从i计算i+1，而是如何利用已有的所有子状态j(j&lt;=i)计算i+1。就写这篇博客的过程，我因为想当然认为这样，差点进入死胡同。</p>
-
-<p>这是动态规划最基本的思考过程。</p>
-
-<p>一般情况下，我们要遍历所有的比i低的状态j，但是并不是所有的j都能转换到i。在这个硬币问题中取决于，是否有个硬币k，使得S[j]+vk=S[i]。这就是状态转移的条件，所以在实践中，我们一般要判断状态j能否转移到条件i，在上例中没有判断的原因是，我们根据硬币价值遍历，遍历到的都肯定满足转移的条件。其他问题，比如无向图中，状态节点j能否转移到节点i取决于i和j之间是否有一条边。这就要判断了，当然假如存储图结构的时候，存储了所有指向节点i的入节点j，就可以遍历这个节点集了，但是对于自底向上的动态规划解决方案中，很少出现。</p>
-
-<p>更复杂一点，状态转移不是一维的，变成二维甚至多维（目前只见过二维）。这种问题，通过比较好的定义子状态，也很好理解。</p>
-
-<p>还有其他的情况下，限制条件所需的信息和我们所求的结果并不一致。比如赋权图中，从节点j到节点i的最短路径，在权值和小于s的前提下。我们最终关心的是路径长度，但是状态转移的限制条件是权值和，这时候需要一个二维数组来存储。</p>
-
-<p>更复杂的情况，乍一看并不是动态规划问题，但是和我们以前遇到过的动态规划问题很像，这时候，我们需要一些转变，把问题转换成以前的问题的升级版去求解。这是最难的，菜鸟级别的我暂时还没什么感受。留在日后补充吧。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -739,11 +751,19 @@ if __name__ == '__main__':
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (7)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (1)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (8)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/01/models-in-perspective-of-math/">模型学习小结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/03/01/java-reference-and-value-parameter/">Java值传递和引用传递</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2013/11/14/text-classification-step-by-step2/">行业关键词分类整理2</a>
@@ -755,14 +775,6 @@ if __name__ == '__main__':
     
       <li class="post">
         <a href="/blog/2013/10/29/mapreduce-program-trial/">MapReduce初试</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/28/hadoop-first-trial/">Hadoop环境搭建小结</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/09/24/summary-of-wikivis-project-2/">知识可视化项目第一阶段总结2</a>
       </li>
     
   </ul>
@@ -802,7 +814,7 @@ if __name__ == '__main__':
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 108.57142857142857%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 108.57142857142857%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 125.71428571428572%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 142.85714285714286%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(7)</a> <a href='/blog/categories/杂项' style='font-size: 117.14285714285714%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 108.57142857142857%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 134.28571428571428%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 108.57142857142857%'>编程语言(1)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 107.5%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 107.5%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 122.5%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 137.5%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(8)</a> <a href='/blog/categories/杂项' style='font-size: 115.0%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 107.5%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 130.0%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 115.0%'>编程语言(2)</a> </span>
 </section>
 
   
@@ -811,7 +823,7 @@ if __name__ == '__main__':
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2013 - Xutianming -
+  Copyright &copy; 2014 - Xutianming -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

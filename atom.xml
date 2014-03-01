@@ -4,7 +4,7 @@
   <title><![CDATA[Xutianming Blog]]></title>
   <link href="http://xutianming.github.io/atom.xml" rel="self"/>
   <link href="http://xutianming.github.io/"/>
-  <updated>2013-11-14T14:46:20+08:00</updated>
+  <updated>2014-03-01T22:46:40+08:00</updated>
   <id>http://xutianming.github.io/</id>
   <author>
     <name><![CDATA[Xutianming]]></name>
@@ -12,6 +12,86 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[模型学习小结]]></title>
+    <link href="http://xutianming.github.io/blog/2014/03/01/models-in-perspective-of-math/"/>
+    <updated>2014-03-01T22:16:00+08:00</updated>
+    <id>http://xutianming.github.io/blog/2014/03/01/models-in-perspective-of-math</id>
+    <content type="html"><![CDATA[<p>近来我对机器学习的模型有了一些更接近本质的认识。也让机器学习的这些理论，在我的眼里，变得不那么神秘。</p>
+
+<p>机器学习的理论，可以分为两个部分，一部分是建模，一部分是求解模型。所有的机器学习算法，逻辑斯蒂回归、支持向量机，本质上来讲，都是一套建模的方法和一套可行有效的解法。</p>
+
+<p>建模，从数学的角度，是对实际问题的描述。比如逻辑斯蒂回归利用逻辑斯蒂分布的特殊性质建模，也就是odds ratio为线性函数。而odds ratio是本sample为正例和负例的概率的比值的log。这样odds ratio的正负，可以代表本sample为正例的概率大还是为负例的概率大。而odds ratio的正负，就是线性函数的正负。因此有了逻辑斯蒂回归。建模的任务是描述问题，并得出目标函数，也即是Loss Function。Loss Function经常利用极大似然估计（Max likelyhood）和最小平方误差（Least squares）写出。支持向量机也是如此，支持向量机的建模过程中，认为sample到分类超平面的距离，衡量分类的置信程度。那么定义符合要求的分类超平面为，数据集中所有的点，到本分类超平面的距离，都大于等于R。然后极大化R，得到目标函数。</p>
+
+<p>得到目标函数之后，就要求目标函数的极值。数学里的最优化问题，有非常多的方法。常见的有梯度下降法、牛顿法、拟牛顿法。理论上来讲，求解和建模是独立和分开的，也就是说，上面建模得到的目标函数，可以用任意一种最优化解法来解。当然这只是最理想的情况。实践中，每一种模型（目标函数），几乎都对应了一种实际可行的，可计算的解法。</p>
+
+<p>从这种比较高层次的角度，再去读那些机器学习的书籍，会更加从容，应该可以把握的更好。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Java值传递和引用传递]]></title>
+    <link href="http://xutianming.github.io/blog/2014/03/01/java-reference-and-value-parameter/"/>
+    <updated>2014-03-01T21:25:00+08:00</updated>
+    <id>http://xutianming.github.io/blog/2014/03/01/java-reference-and-value-parameter</id>
+    <content type="html"><![CDATA[<p>网上一搜Java引用传递，会出来很多博客，会举出好多例子来说明Java的引用传递。当然有一小部分博客说，Java是没有引用传递的。最近在做项目的过程中，我也遇到了这些问题，看这些中文博客更是一头雾水。只有经过了自己的实践，才有了可以让自己信服的结论：</p>
+
+<p>Java里没有在C++意义上的那种引用传递，全是值传递。只是在Java中，对象分为基本类型和引用类型。典型的基本类型，包含所有的基本类型（primitive）；而对象等高级类型，属于引用类型。基本类型作为参数传递的时候，就是普通意义上的值传递，没啥争论，而引用类型作为参数的时候，传递的是本对象的引用的值。所以一概是值传递，而没有C++意义上的引用传递。下面也用代码来说明。</p>
+
+<pre><code>public void setA(ArrayList&lt;Double&gt; a) {
+    ArrayList&lt;Double&gt; b = new ArrayList&lt;Double&gt;();
+    b.add(2.0);
+    a.add(4.0);
+    a=new ArrayList&lt;Double&gt;(b);
+    a.add(3.0);
+}
+</code></pre>
+
+<p>上面这段代码，运行之后，a里面只多了4.0。也就是说，只有<code>a.add(4.0)</code>起了作用。按照我们上面的理论，a是原数组的一个引用，指向原数组。那么<code>a.add(4.0)</code>自然可以影响到原数组。下面的<code>new ArrayList</code>语句，改变了a的指向，a指向一个新的数组。这时候再<code>a.add(3.0)</code>就是影响的新建的这个数组了。函数调用结束，a被还原指向原来的数组（这就是值传递的机制，原来数组的引用在函数调用之前保存在堆栈中，复制一份作为函数参数传递进去，函数调用结束恢复）。所以运行之后，a里只有4.0。</p>
+
+<p>那么什么是引用传递呢。其实这是C++里的概念，就是传递的是引用。同样的代码用C++写。</p>
+
+<pre><code>void setA(vector&lt;double&gt; a) {
+    a.push_back(1.0);
+    vector&lt;double&gt; b;
+    b.add(2.0);
+    a=b;
+}
+int main() {
+    vector&lt;double&gt; a;
+    setA(a);
+    cout&lt;&lt;a.size()&lt;&lt;endl;
+    return 0;
+}
+</code></pre>
+
+<p>在这段代码里不论setA里做什么，a都不变。因为是值传递。那么C++的引用传递是什么呢？</p>
+
+<pre><code>void setA(vector&lt;double&gt; &amp;a) {
+    a.push_back(1.0);
+    vector&lt;double&gt; b;
+    a=b;
+}
+
+int main() {
+    vector&lt;double&gt; a;
+    a.add(1.0);
+    setA(a);
+    cout&lt;&lt;a.size()&lt;&lt;endl;
+    return 0;
+}
+</code></pre>
+
+<p>这样就能改变a的值了。</p>
+
+<p>最后附上我所说的结论的证明。</p>
+
+<p><a href="http://stackoverflow.com/questions/40480/is-java-pass-by-reference">http://stackoverflow.com/questions/40480/is-java-pass-by-reference</a></p>
+
+<p>Java中的reference type 和 C++中的reference type是指的不同的东西的，在Java中，引用类型指的是Java对某一系列类型的处理方式，而在C++中，引用类型是一种切实的类型，和指针一样，可以与其他类型组合出一些复合类型。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[行业关键词分类整理2]]></title>
@@ -698,28 +778,6 @@ C++:    cout &lt;&lt; ans &lt;&lt; endl &lt;&lt; endl;
 <p>学习Java最直接的工具还是API文档了。我无意间查到了抛出这个异常的newInstance方法，下面明确写着，当新建对象的类构造方法在被调用时抛出异常，此异常将被抛出。问题解决了：测试者提供的给构造方法的参数有两个，而此类构造方法只接受一个参数，于是乎异常被抛出。</p>
 
 <p>最终的答案是简单的，但是要是在项目开发中意识到这个问题难度还是很大的，需要有对项目足够的理解再加上足够的开发经验才能做到。对项目整体功能的把握和对每个细节精确的理解，是我所发现的最大差距所在，也将是我近期努力的目标。毕竟所掌握的技术和各种编码技巧不是一个技术人员价值的最大体现。严谨的思维和对细节的把握才是技术人员身上的闪光点，这是无可替代的。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[博客迁移声明]]></title>
-    <link href="http://xutianming.github.io/blog/2013/07/11/blog-migration-announcement-and-markdown-trial/"/>
-    <updated>2013-07-11T13:12:00+08:00</updated>
-    <id>http://xutianming.github.io/blog/2013/07/11/blog-migration-announcement-and-markdown-trial</id>
-    <content type="html"><![CDATA[<p>从今天起，就要从原先的博客园博客迁移到我的github博客啦。以后这个博客上会更多的放我自己写的东西，然后博客园的博客用来进行日常学习摘抄和积累，毕竟博客园博客写起来更方便一些，也不需要在我的机器上。</p>
-
-<p>由于现在这个博客很空，这几天我会陆续搬一些以前我自己写的东西在这上面，这样可以帮助我快速掌握这个博客的使用方法，并且也熟悉一下markdown的语法，以后真要写东西就不会为这些事情烦心了。</p>
-
-<p>终于有了属于自己的博客站点，好开心，感谢github，感谢octopress。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Creating a Github Blog Using Octopress]]></title>
-    <link href="http://xutianming.github.io/blog/2013/07/10/creating-a-github-blog-using-octopress/"/>
-    <updated>2013-07-10T10:56:00+08:00</updated>
-    <id>http://xutianming.github.io/blog/2013/07/10/creating-a-github-blog-using-octopress</id>
-    <content type="html"><![CDATA[
 ]]></content>
   </entry>
   
