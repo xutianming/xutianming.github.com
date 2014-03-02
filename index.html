@@ -9,7 +9,7 @@
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="近来我对机器学习的模型有了一些更接近本质的认识。也让机器学习的这些理论，在我的眼里，变得不那么神秘。 机器学习的理论，可以分为两个部分，一部分是建模，一部分是求解模型。所有的机器学习算法，逻辑斯蒂回归、支持向量机，本质上来讲，都是一套建模的方法和一套可行有效的解法。 建模，从数学的角度， &hellip;">
+  <meta name="description" content="最近一直在研究逻辑斯蒂回归算法。参考的是MSRA的Galen Andrew以及Jianfeng Gao的OWLQN算法。这一算法，是基于L-BFGS算法提出的。目标函数是带L1规范化的L2逻辑斯蒂回归损失函数，也就是说，即有L1也有L2，也可以只取其一。算法中， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,84 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/03/02/hadoop-owlqn/">分布式机器学习算法框架的设计与实现</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-03-02T14:52:00+08:00" pubdate data-updated="true">Mar 2<span>nd</span>, 2014</time>
+        
+         | <a href="/blog/2014/03/02/hadoop-owlqn/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近一直在研究逻辑斯蒂回归算法。参考的是MSRA的Galen Andrew以及Jianfeng Gao的OWLQN算法。这一算法，是基于L-BFGS算法提出的。目标函数是带L1规范化的L2逻辑斯蒂回归损失函数，也就是说，即有L1也有L2，也可以只取其一。算法中，为了解决带L1规范化的目标函数在0点不可导的困难，定义了伪梯度。其他的步骤，与经典的L-BFGS算法大体一致。</p>
+
+<p>这里给出几个参考链接，对于阅读论文有很大的帮助。</p>
+
+<p><a href="http://en.wikipedia.org/wiki/Limited-memory_BFGS">L-BFGS</a></p>
+
+<p><a href="http://en.wikipedia.org/wiki/Backtracking_line_search">Backtracking Line Search</a></p>
+
+<p><a href="http://en.wikipedia.org/wiki/Wolfe_conditions">Wolfe Conditions</a></p>
+
+<p><a href="http://en.wikipedia.org/wiki/Directional_derivative">Directional Derivative</a></p>
+
+<p><a href="http://pan.baidu.com/disk/home">zjuOptimization课件</a></p>
+
+<p>结合论文作者给出的单机LR的C++代码，可以比较快速的了解算法。但是我个人感觉原本的设计并不是特别好，C++的实现也比较一般，类的设计略显牵强。当然这是我从一个学习者的角度给出的评价，我代码读起来还很费劲的。</p>
+
+<p>有了上述的知识以及对单机代码的掌握之后，我决定实现分布式的版本。基于Hadoop的MapReduce。首先分析，当数据量增大，所有的训练数据不足以存放在单机内存中时，算法的主要瓶颈在哪里。通过阅读代码可知，算法最耗时地方在于计算当前w下，所有训练样本的Loss的和，并更新梯度，也就是源码中的Eval函数。很自然的想法是，把数据分块，在每个Mapper上计算本样本的Loss和本样本对梯度更新的影响，在Reducer中对这些计算结果求和。这样，在LineSearch中，要进行多次的Eval，也就是每次迭代可能都要进行多次MR任务。这样的设计思路非常简单，但是存在很多限制，我会在博客的最后一一说明，这些改进将是下一步的工作方向。</p>
+
+<p>下面主要说说我的设计。我说到单机C++版本的OWLQN设计的并不太好，我在我的设计中做了改进，也用了很多Java面向对象的特性。</p>
+
+<ol>
+<li>DifferentiableFunction接口。目标函数均为可导函数，所以当要扩展其他的算法时，只要实现此接口，本接口定义的功能有：函数求值、求某一点的梯度、求某一点在某方向的方向导数。</li>
+<li>OptimizationSolution接口。定义最优化解法，本项目中为OWLQN，提供求解最优化的Minimize算法。当要扩展其他的解法时，比如梯度下降法，只要实现本接口就行。</li>
+<li>IterationState抽象类。用于记录迭代中的信息，抽象类定义了一些基本的操作。</li>
+<li>TerminationCriterion接口。迭代收敛的条件，用本条件和Tolerant做比较，小于Tol即为收敛。</li>
+</ol>
+
+
+<p>项目不大，但是Java面向对象的特性几乎都用到了。封装、继承、多态，面向接口和抽象类编程，即可在运行时根据传入参数的具体类型，调用对应的方法，非常灵活。</p>
+
+<p>关于接口和抽象类，有很多相似点也有很多不同。它们都可以用来设计编程接口，让项目的扩展按照设计者的思路来，从语法层面限制扩展的方式。不同在于，接口更加灵活，因为Java类可以实现多个接口，但是只能继承一个类。类通过继承，有更强的限制性，并且使用继承的话，可以提供一些基本操作的实现，比如IterationState中的IterIncrement，增加迭代计数。</p>
+
+<p>关于设计的改进，也就是我的设计与原项目不同在哪里呢？除了面向对象特性的应用外，主要的区别在于IterationState，原先的项目，把所有的计算，放在这个类里，并设置OWLQN类为FriendClass，非常的不合理，破坏了封装，逻辑上的划分也非常混乱。于是我在我的实现中，重新进行的划分和封装。</p>
+
+<p>总的来说，新的设计，思路更加清晰并且扩展性也非常好。下一步，我计划将SVM也放入这个框架。</p>
+
+<p>下一步的工作，主要是从本项目现有的缺陷出发。</p>
+
+<p>本项目是基于Hadoop MapReduce的，有个非常大的限制，就是结点的IO。比较理想的情况下，我在进行每次迭代计算的时候，分到每个结点的数据集是不变的，变化的是当前的点X，那么这时候如果每个结点可以把分来的数据载入内存，每次迭代只根据不同的X进行计算，就可以避免本节点的磁盘IO，进而提高程序性能。但是MR框架，是不能避免磁盘IO的，每次都要读一遍数据。业界也早已发觉MR在分布式机器学习上的这一缺陷，于是有的基于MPI自己实现分布式，近两年也出现了新兴的开源的分布式计算框架Spark。这就是业界的方向了，我也会尽量的去了解下这些新兴的技术。</p>
+
+<p>另外，在这个项目中，我设计的分布式算法还是很初级的，我的测试数据的维度并不高，那么我的训练数据矩阵按行处理，在和其他同学交流的时候，他们有提出，每一个训练sample也可以被划分，有可能会利用复杂的矩阵运算，来使得高维数据可以利用MR分布式计算。当然这只是一个初步的想法，具体的方向，还有待于进一步的阅读研究和请教。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -695,50 +773,6 @@ if __name__ == '__main__':
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/09/22/preprocessing/">打表与预处理</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-09-22T13:31:00+08:00" pubdate data-updated="true">Sep 22<span>nd</span>, 2013</time>
-        
-         | <a href="/blog/2013/09/22/preprocessing/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>在ACM编程中，俗称打表，学名预处理。是我最近学习到的一个编程技巧。思想很简单自然，就是当有多组测试数据，但是每组测试数据的计算过程都是一模一样的。这时候，为了提高效率，节省计算资源，就会使用打表。</p>
-
-<p>举例说明，计算斐波那契数列，可能要求输出第30-100项。算法中，我们会自底向上计算，也就是从第1项一直计算到第n项。每计算一项，都是重复这个过程。假如不对算法进行优化的话，我们计算第30项，要从第1项计算过来，计算第100项的时候，还要再从第一项计算一遍，这种情况下，就浪费计算资源了！</p>
-
-<p>对于这种问题的优化思路，就是事先计算好所有可能需要输出的项，比如题目限制n&lt;=10000，那就把前10000项的斐波那契数列都计算好，存在数组里，然后根据测试用例的要求，输出对应的项就好了。</p>
-
-<p>这种计算一次使用多次的思想，与动态规划非常相似。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -751,11 +785,15 @@ if __name__ == '__main__':
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (8)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (9)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/02/hadoop-owlqn/">分布式机器学习算法框架的设计与实现</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/03/01/models-in-perspective-of-math/">模型学习小结</a>
@@ -771,10 +809,6 @@ if __name__ == '__main__':
     
       <li class="post">
         <a href="/blog/2013/11/14/text-classification-step-by-step/">行业关键词分类项目总结1</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/29/mapreduce-program-trial/">MapReduce初试</a>
       </li>
     
   </ul>
@@ -814,7 +848,7 @@ if __name__ == '__main__':
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 107.5%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 107.5%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 122.5%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 137.5%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(8)</a> <a href='/blog/categories/杂项' style='font-size: 115.0%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 107.5%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 130.0%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 115.0%'>编程语言(2)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 106.66666666666667%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 106.66666666666667%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 120.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 133.33333333333334%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(9)</a> <a href='/blog/categories/杂项' style='font-size: 113.33333333333333%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 106.66666666666667%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 126.66666666666667%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 113.33333333333333%'>编程语言(2)</a> </span>
 </section>
 
   

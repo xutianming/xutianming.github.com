@@ -9,7 +9,7 @@
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="从今天起，就要从原先的博客园博客迁移到我的github博客啦。以后这个博客上会更多的放我自己写的东西，然后博客园的博客用来进行日常学习摘抄和积累，毕竟博客园博客写起来更方便一些，也不需要在我的机器上。 由于现在这个博客很空，这几天我会陆续搬一些以前我自己写的东西在这上面， &hellip;">
+  <meta name="description" content="最近接到的项目，终于过了第一轮，兴奋之余还是要静下心来好好研究代码。第二轮得分只有60分，意料之中，做的时候就发现有很多不会的了，当时及时记录下来，所以这次看代码也有针对性的多。 逻辑代码最大的问题还是出在异常处理上，有很多不合适的地方，不过经历过这次下次应该不会再犯了。测试依然疑问最多， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,60 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/11/invocation-target-exception/">由invocationTargetException引发的思考</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-11T16:28:00+08:00" pubdate data-updated="true">Jul 11<span>th</span>, 2013</time>
+        
+         | <a href="/blog/2013/07/11/invocation-target-exception/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近接到的项目，终于过了第一轮，兴奋之余还是要静下心来好好研究代码。第二轮得分只有60分，意料之中，做的时候就发现有很多不会的了，当时及时记录下来，所以这次看代码也有针对性的多。</p>
+
+<p>逻辑代码最大的问题还是出在异常处理上，有很多不合适的地方，不过经历过这次下次应该不会再犯了。测试依然疑问最多，很多莫名的异常不知道如何抛出，归根到底还是Java的基础不牢，不过这也不是一天两天的事情，见的多了自然熟悉。</p>
+
+<p>今天看到一个很常见的异常&mdash;InvocationTargetException，顾名思义，在反射机制中，如果当前执行的方法所调用的方法抛出异常，会被包装成这个异常，</p>
+
+<p>当然这在之前我是不知道的。因为在coding的时候，一写反射的语句，IDE会自动提示需要处理这个异常，于是乎很自然而然的就写上了catch（InvocationTargetException），不需要理由。可是当编写单元测试的时候问题就来了，你需要构造一套参数，让函数抛出这个异常以验证代码可以捕获这个异常。</p>
+
+<p>最一开始是从研究Winner的代码开始的，看到Winner写的对应的测试，很是摸不着头脑，不知道Winner的参数为何可以导致异常，上网查资料，除了API只外几乎没有任何资料，API中对于这个异常又描述甚少。手头的各种Java工具书这时候也派不上用场了。无计可施，只好请教学长。其实这个问题大家平时都遇到过，因为反射是TC上最常用到的技术之一，可能是因为太不显眼，所以大家之前都不约而同的无视它了。现在提出来，于是我们一起摸索。</p>
+
+<p>摸索的过程也是我学习的过程，很多思想我慢慢树立起来。构造异常测试，首先看配置文件，因为参数的不合法是导致异常的最常见原因。总之要充分利用项目文档所提供给我们的信息，这可以极大的提高开发的效率和质量。毕竟很多问题已经不需要我们去思考了，designer已经为我们考虑到，我们只需要照做。对于如此短的项目周期来说，这一点很重要。</p>
+
+<p>这个异常是反射机制定义的异常，自然在开发文档中找不到了。接下来我们还是走了小小的弯路，我们找来了JDK的源码&hellip;&hellip;各种复杂的关系和调用，最终崩溃。放弃&hellip;&hellip;不过我还是学了一小招。参考源码确实能解决很多问题，但是这在简单的类中比较实用。比如说String这样的类，里面的诸如substring ,spilt等方法可以给我们提供算法的灵感。</p>
+
+<p>学习Java最直接的工具还是API文档了。我无意间查到了抛出这个异常的newInstance方法，下面明确写着，当新建对象的类构造方法在被调用时抛出异常，此异常将被抛出。问题解决了：测试者提供的给构造方法的参数有两个，而此类构造方法只接受一个参数，于是乎异常被抛出。</p>
+
+<p>最终的答案是简单的，但是要是在项目开发中意识到这个问题难度还是很大的，需要有对项目足够的理解再加上足够的开发经验才能做到。对项目整体功能的把握和对每个细节精确的理解，是我所发现的最大差距所在，也将是我近期努力的目标。毕竟所掌握的技术和各种编码技巧不是一个技术人员价值的最大体现。严谨的思维和对细节的把握才是技术人员身上的闪光点，这是无可替代的。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -158,11 +212,15 @@
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (8)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (9)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/03/02/hadoop-owlqn/">分布式机器学习算法框架的设计与实现</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/03/01/models-in-perspective-of-math/">模型学习小结</a>
@@ -178,10 +236,6 @@
     
       <li class="post">
         <a href="/blog/2013/11/14/text-classification-step-by-step/">行业关键词分类项目总结1</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/10/29/mapreduce-program-trial/">MapReduce初试</a>
       </li>
     
   </ul>
@@ -221,7 +275,7 @@
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 107.5%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 107.5%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 122.5%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 137.5%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(8)</a> <a href='/blog/categories/杂项' style='font-size: 115.0%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 107.5%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 130.0%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 115.0%'>编程语言(2)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 106.66666666666667%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 106.66666666666667%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 120.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 133.33333333333334%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(9)</a> <a href='/blog/categories/杂项' style='font-size: 113.33333333333333%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 106.66666666666667%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 126.66666666666667%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 113.33333333333333%'>编程语言(2)</a> </span>
 </section>
 
   
