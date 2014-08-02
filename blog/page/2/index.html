@@ -9,7 +9,7 @@
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="在ACM编程中，俗称打表，学名预处理。是我最近学习到的一个编程技巧。思想很简单自然，就是当有多组测试数据，但是每组测试数据的计算过程都是一模一样的。这时候，为了提高效率，节省计算资源，就会使用打表。 举例说明，计算斐波那契数列，可能要求输出第30-100项。算法中，我们会自底向上计算， &hellip;">
+  <meta name="description" content="写Python一段时间了，由于从初学到现在，一直还在熟悉语法和各种数据结构，以事先功能为主，自觉代码写的非常丑陋，现在也写了不少Python代码了，是时候挑战下习惯，遵循合适的代码风格，写简单易读的代码，Be Pythonic!! 本文主要参考了《Google Python Style Guide &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,84 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/09/22/python-style-guide/">Python Style Guide</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-09-22T14:01:00+08:00" pubdate data-updated="true">Sep 22<span>nd</span>, 2013</time>
+        
+         | <a href="/blog/2013/09/22/python-style-guide/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>写Python一段时间了，由于从初学到现在，一直还在熟悉语法和各种数据结构，以事先功能为主，自觉代码写的非常丑陋，现在也写了不少Python代码了，是时候挑战下习惯，遵循合适的代码风格，写简单易读的代码，Be Pythonic!!</p>
+
+<p>本文主要参考了《<a href="http://google-styleguide.googlecode.com/svn/trunk/pyguide.html">Google Python Style Guide</a>》、《<a href="http://programmers.stackexchange.com/questions/119913/how-can-i-learn-to-effectively-write-pythonic-code">How can I learn to effectively write Pythonic code</a>》、《<a href="http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html">Code Like a Pythonista: Idiomatic Python</a>》三篇文章，摘取了其中我现在可能需要遵循的，因为有些做比较大的系统的项目才用到的，暂时就没写。我主要以写小算法和小工具为主。</p>
+
+<p>一、编码风格：</p>
+
+<p>1、不要使用分号，也不要利用分号把两个命令放在一行</p>
+
+<p>2、每行代码不超过80（特殊情况下，尽量不要把链接分开两行放）</p>
+
+<p>3、少用括号，条件语句和return语句不要用括号（特殊情况下，利用括号来进行断行可以）</p>
+
+<p>4、缩进用四空格（一般在文本编辑器里设置tab转四空格）</p>
+
+<p>5、空格使用。语法符号之后用空格，但是括号、花括号、方括号之后不要用。逗号冒号之后有个空格，但是之前不要有。赋值号前后有空格，但是在使用默认参数的时候，不要加。</p>
+
+<p>6、一系列的赋值或者相同的操作。没必要用空格来使赋值号对齐。</p>
+
+<p>7、字符串的使用。尽量使用string format和&#8217;%&lsquo;而不是&rsquo;+&lsquo;。在循环中构造字符串的时候，不要使用&rsquo;+&lsquo;和&rsquo;+=&lsquo;，而是把所有的字符串先存在一个list里，然后在循环结束之后，用join函数。（这一点需要格外注意，具体原因原文有）</p>
+
+<p>8、多行string尽量不要用三个连续的引号，因为会破坏整体的缩进。使用join函数拼接。</p>
+
+<p>9、file和socket使用完毕要显式关闭</p>
+
+<p>10、临时的实现临时插入的代码，使用TODO注释</p>
+
+<p>11、import的组织。每行一个，不要一次import多个。按照标准库、第三方库、程序特有的，这一顺序进行引用，统一级别按照字母顺序排序。</p>
+
+<p>12、命名规范。module_name, package_name, ClassName, method_name, ExceptionName, function_name, GLOBAL_CONSTANT_NAME, global_var_name, instance_var_name, function_parameter_name, local_var_name。大部分使用了小写和下划线。</p>
+
+<p>13、所有的脚本都应该是可import的，并且脚本被import之后，不能对当前脚本的功能有所影响。所以，脚本都应该有主函数！</p>
+
+<pre><code>def main():
+    …
+if __name__ == '__main__':
+    main()
+</code></pre>
+
+<p>不然的话，主程序的逻辑，会在被import的时候被执行。</p>
+
+<p>14、注释。使用正确的注释方法。见原文。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -651,86 +729,6 @@ C++:    cout &lt;&lt; ans &lt;&lt; endl &lt;&lt; endl;
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/19/text-classification-in-action/">文本分类实践</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-19T22:14:00+08:00" pubdate data-updated="true">Jul 19<span>th</span>, 2013</time>
-        
-         | <a href="/blog/2013/07/19/text-classification-in-action/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>学习机器学习有一阵子了，先是仔细阅读了《统计学习方法》这本书，对目前比较流行的统计学习方法和模型有了大致的认识，比如朴素贝叶斯、逻辑斯蒂回归、支持向量机、隐马尔科夫模型等等。但是仅仅有理论上的认识是不够的，关键还是指导实践解决问题。</p>
-
-<p>先前在百度实习的时候，已经对机器学习有了初步的认识，并且当时也利用逻辑斯蒂回归训练了一个还算不错的模型，虽然最终由于时间原因，没有做成一个可以应用到线上的模块，但是对于我对机器学习的这第一次尝试，我还是很满意的，当时也决定在研二的这一年里，好好研究一下机器学习相关的东西，以后好找相关方向的工作。</p>
-
-<p>最初的实践决定从文本分类开始，因为这个领域相对来说研究的比较成熟，并且在工业界仍然有很多很重要的应用。由于svm一直是个非常重要的机器学习模型，之前对原理有一定的了解，于是决定从使用svm开始。网上相关的教程很多，我也是慢慢参考着别人的方法一步一步尝试。这里主要记录下我实践的过程，以供日后参考。</p>
-
-<p>文本分类大致分为以下几步：</p>
-
-<ul>
-<li>数据预处理（一般是分词，去停）</li>
-<li>特征选择（比较好的方法有卡方校验和信息增益）</li>
-<li>特征值确定（比较好的是tf-idf值）</li>
-<li>特征向量计算</li>
-<li>模型训练</li>
-<li>模型测试</li>
-</ul>
-
-
-<p>我使用的是复旦大学自然语言理解实验室提供的预料，选取了computer、agriculture、sports和history，选择分类的时候特意选择了差别比较大的几类，这样可以在某种程度上提高分类效果吧。</p>
-
-<p>首先是数据预处理，我使用了同事推荐了一个分词工具，分词的效果不是很好，算是个初级的分词工具，基于python的，使用起来非常简单。分词之后，把预料中的文章，处理成了一个词一行的文档，便于下一步的处理。</p>
-
-<p>数据预处理之后，就是选择特征了，这里所谓的“特征”，就是上一步分出来的一个一个的词，每个词都可以说是一个特征，但是把每个特征都哪来使用，显然是不现实的，太高维的特征向量，首先训练起来比较费时，另外会使模型复杂度提升从而容易使svm训练过拟合。我训练的时候，本想使用1w维的特征，最终使用了7600左右的特征，具体的我后面会说。考虑到以上原因，所以要有个特征选择的过程，也就是选择那些可以很好的区分每一类的词，比如包含了“农业”一词的文章，属于农业类的可能性比较大，所以这样的词，就算是好特征。那么如何筛选出这些特征呢，要有个数学上的量，来衡量特征的好坏，可供选择的有互信息、信息增益、卡方校验等方法。其中互信息的效果比较差，我就没自己尝试，我先后使用了信息增益和卡方校验的方法。</p>
-
-<p>卡方校验，学名是“皮尔森卡方检验”，是一种假设检验方法。首先，我们的假设是“词word和类class不相关”，然后针对包含word的文档和以及属于class的文档的联合分布，算卡方值，每类选择卡方值最大的2500个值，去作为特征值，因为卡方值越大，倾向于原假设为假，也就是说，卡方值越大，词word和类class越相关，这个词就是我们要找的好特征。为啥是2500个值，因为我初步决定选择1w个特征么，一共四类，每一类选择2500个。最终计算下来，因为分词效果的原因，很多单字的特征被筛选出来，但是单字的信息非常少，我觉得不足以作为一个好的特征，所以我对于筛选出来的1w个特征，去除了那些单字的词，就剩下了大约7600个词作为特征。</p>
-
-<p>特征选择出来之后，我们要利用这些特征去表示要分类的文档，也就是所谓的“把文档映射到特征空间”，用向量来表示文档。这里会遇到一个问题，如何用特征表示文档，另外每个特征对于一个文档都是等同重要的嘛？这里就自然涉及到为特征赋权重。我是用的是tf-idf值。选择这个的原因是，卡方校验有个缺陷，就是“低频率缺陷”，那些在一篇文档里只出现过一次的词，也有可能会有很大的卡方值，但是这个词，对这篇文章可能没太大价值，那些只在某一类文章中大量出现，而在其他类中很少出现的词，才是决定类别的词。而我个人认为tf-idf值可以比较好的弥补这一缺陷。当然我只是定性分析，我不太懂数学上的证明，也没去查阅相关的资料。</p>
-
-<p>如此一来，我们把文档用特征向量来表示了，接下来就是训练模型了。在上述过程的实现过程中，我没有遇到太大的问题，unix+python是很有利的文本处理工具，实现起来很快。我是用的svm工具是libsvm，使用也很简单，但是我确实在训练模型的时候遇到了一个问题。</p>
-
-<p>一般来讲，libsvm的使用流程是这样的：</p>
-
-<ul>
-<li>svm-scale，对数据进行归一化处理，映射到[0,1]区间内</li>
-<li>grid.py 寻找最优参数c和g</li>
-<li>svm-train</li>
-<li>svm-predict</li>
-</ul>
-
-
-<p>我第一次使用的时候，用信息增益选择特征，libsvm不太懂，也没去查太多的资料，略去了第二步，也就是我训练的时候没指定参数。这训练效果太差了，把所有的文档都分到了一类中。一开始我总怀疑特征提取的不好，于是换卡方校验，结果还是这样，之后开始怀疑我训练的方法不对，于是很快发现了问题。在指定c和g参数之后，训练结果非常好，对训练数据的准确率为100%，在测试集上的准确率为93.52%，比人家论文上的准确率还高，非常让人振奋。</p>
-
-<p>至此，算是完满的完成了一次svm文本分类的实践，结果也符合之前给自己定的目标90%以上的准确率。接下来，我会根据这次实践的结果，总结分析，再回归到svm的理论上，比如c和g具体含义对应的是什么，借此机会深入理解svm，好更好的掌握这个工具的使用。然后还会再用同样的方法，实践体会其他的分类模型，比如逻辑斯蒂回归、神经网络等等。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/3/">&larr; Older</a>
@@ -745,11 +743,15 @@ C++:    cout &lt;&lt; ans &lt;&lt; endl &lt;&lt; endl;
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (9)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (9)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (3)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/08/02/a-brief-summary-of-internship-in-alibaba/">对算法、工程和个人方向的一些小思考</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/03/02/hadoop-owlqn/">分布式机器学习算法框架的设计与实现</a>
@@ -765,10 +767,6 @@ C++:    cout &lt;&lt; ans &lt;&lt; endl &lt;&lt; endl;
     
       <li class="post">
         <a href="/blog/2013/11/14/text-classification-step-by-step2/">行业关键词分类整理2</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/text-classification-step-by-step/">行业关键词分类项目总结1</a>
       </li>
     
   </ul>
@@ -808,7 +806,7 @@ C++:    cout &lt;&lt; ans &lt;&lt; endl &lt;&lt; endl;
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 106.66666666666667%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 106.66666666666667%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 120.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 133.33333333333334%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(9)</a> <a href='/blog/categories/杂项' style='font-size: 113.33333333333333%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 106.66666666666667%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 126.66666666666667%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 113.33333333333333%'>编程语言(2)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 106.66666666666667%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 106.66666666666667%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 120.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 133.33333333333334%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(9)</a> <a href='/blog/categories/杂项' style='font-size: 120.0%'>杂项(3)</a> <a href='/blog/categories/生活' style='font-size: 106.66666666666667%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 126.66666666666667%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 113.33333333333333%'>编程语言(2)</a> </span>
 </section>
 
   

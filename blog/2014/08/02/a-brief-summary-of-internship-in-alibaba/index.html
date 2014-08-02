@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>为控件增加鼠标悬浮提示 - Xutianming Blog</title>
+  <title>对算法、工程和个人方向的一些小思考 - Xutianming Blog</title>
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="上星期阅读了《Interactive Data Visualization for the Web》一书之后，便开始尝试使用D3js了。以前一直没怎么写过前端和界面，个人对于坐标位置布局什么的相当没感觉，总是乱乱的。所以这次写来，大部分也都是用的别人写好的现成的东西，在这个基础上做些改动。 &hellip;">
+  <meta name="description" content="从5月份从搜狐离职进入阿里实习，已经有几个月没写博客了。这也基本上反映了我这段时间的状态，实习、个人学习，占据了这段时间我的所有时间。一直拼命奔跑，很久没停下来好好思考总结下了。校招马上开始，陆续会有很多面试，也是时候对自己的这段时间进行下回顾和思考了。 去年底来到搜狐，和克竞的合作， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3">
+  <link rel="canonical" href="http://xutianming.github.io/blog/2014/08/02/a-brief-summary-of-internship-in-alibaba">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Xutianming Blog" type="application/atom+xml">
@@ -68,7 +68,7 @@
   
   <header>
     
-      <h1 class="entry-title">为控件增加鼠标悬浮提示</h1>
+      <h1 class="entry-title">对算法、工程和个人方向的一些小思考</h1>
     
     
       <p class="meta">
@@ -84,7 +84,7 @@
   
 
 
-<time datetime="2013-08-26T14:21:00+08:00" pubdate data-updated="true">Aug 26<span>th</span>, 2013</time>
+<time datetime="2014-08-02T15:48:00+08:00" pubdate data-updated="true">Aug 2<span>nd</span>, 2014</time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -93,29 +93,27 @@
   </header>
 
 
-<div class="entry-content"><p>上星期阅读了《Interactive Data Visualization for the Web》一书之后，便开始尝试使用D3js了。以前一直没怎么写过前端和界面，个人对于坐标位置布局什么的相当没感觉，总是乱乱的。所以这次写来，大部分也都是用的别人写好的现成的东西，在这个基础上做些改动。</p>
+<div class="entry-content"><p>从5月份从搜狐离职进入阿里实习，已经有几个月没写博客了。这也基本上反映了我这段时间的状态，实习、个人学习，占据了这段时间我的所有时间。一直拼命奔跑，很久没停下来好好思考总结下了。校招马上开始，陆续会有很多面试，也是时候对自己的这段时间进行下回顾和思考了。</p>
 
-<p>今天做的改动之一就是为标签Text增加鼠标悬浮事件，提示改概念的定义。</p>
+<p>去年底来到搜狐，和克竞的合作，让我慢慢真正走入了算法的大门，让我对机器学习的理论有了一些比较深刻的认识，当然仅仅限于算法本身，我的工作，并没有涉及太多的业务。我也做了不少和算法工程实现相关的工作，也接触到了Spark。克竞离职之后，很多事情青黄不接，我的工作也一直没有太大进展，考虑到时间的宝贵，我离开搜狐来到了阿里，投奔钩哥。说是“投奔”钩哥，确实如此。我抱着可以对机器学习有更加深入的理解的目的，来到新的工作环境，开始了我新的旅行。如果说，在搜狐我真正接触了算法，那么在阿里，我对业界的算法有了更加真实的认识和一些理性的思考。</p>
 
-<p>效果图如下：</p>
+<p>阿里是一家相当务实的公司，所有的工作都是以业务发展为导向的。我所在的爱淘宝，目前的算法工作，主要是以策略为主，大多用传统的数据挖掘方法，机器学习的模型尚未大量使用。这一点，和我在搜狐研究院的时候的认识，有着比较大的出入，当时团队在工作的时候，更偏向于使用模型来解决问题。这是两种做事的风格，Leader作出这些选择，都是从团队的位置和目的出发的，无法评价说孰优孰劣。只能说，从对业务的发展来看，阿里更加务实，也会更加快速的迭代，业务发展更快。</p>
 
-<p><img src="http://i.imgur.com/0E53nrC.jpg" alt="Imgur" /></p>
+<p>如此来说，短短几个月的实习时间里，我很难接触到模型相关的工作，而我个人并不是特别喜欢过早是深入某个业务领域。而各种数据权限限制，也让我这个实习生很难完全接触到阿里丰富的数据。我认识到这些，大约花了一个月的时间。接下来，我作出了转变。</p>
 
-<p>这段代码参考了StackOverflow上的这个<a href="http://stackoverflow.com/questions/10805184/d3-show-data-on-mouseover-of-circle">帖子</a></p>
+<p>我在阿里的师兄是大家认可的团队里的技术大牛。我申请做了一些C++线上服务开发，也就是偏工程的工作。之前C++的学习和积累得到了发挥，我的工作也得到了师兄的认可，第一个项目马上就要上线，紧接着就要开始第二个项目了。</p>
 
-<pre><code>// Show defination of the current item
-function show_defination(d) {
-    d3.select(this)
-        .append("svg:title")
-        .text(function(d) {return d.def;})
-        .attr("x",function(d) {return d.x+10;})
-        .attr("y",function(d) {return d.y+10;})
-}
-</code></pre>
+<p>这些经历让我慢慢发现了自己更加喜欢、也可能对我来说最现实的工作：那就是转而做系统。</p>
 
-<p>我添加的代码如上，绑定在text控件的mouseover时间上。<code>on("mouseover",show_defination);</code></p>
+<p>首先，做算法，对我来说，并不现实。技术要为业务服务，算法也不例外。要想成功的完成一个算法项目，特别是利用机器学习的方法。需要两方面：对数据的深刻理解和对模型的深刻理解。两者缺一不可。盲目的使用模型，不会带来效果的提升，消耗大量工作力而没有效果，在公司中对自己非常不利。那么更加务实的方法，就是先去理解数据，从分析业务，先解决关键问题，脚踏实地，一步一步优化效果。对数据理解足够深刻之后，算法工程师的模型方面的知识才会派上用场。前者需要时间沉淀，后者需要深厚的理论知识背景。总得来说，我两方面都没有，更关键的是，专注业务会让我越来越远离自己想成为的人。</p>
 
-<p>另外我还发现了一个很好的在线校验json的<a href="http://jsonlint.com/">网站</a></p>
+<p>然后，一直以来，我都追求技术上的成就，希望成为一名出色的工程师。更加现实的，想要在互联网行业里有比较好的发展，技术是立足之本。繁重的业务需求，会让人停留于表面，技术上毫无成长，更好的方式显然是在业务成长的同时获得个人技术沉淀。但是，这样共同成长现实么？不得不说，大部分人做不好。目前国内互联网的发展思路是“快”，凡是讲究快速上线、快速迭代，业务上无创新、无改变，意味着离死也不远了（公司核心营收大头除外，比如搜索广告）。在这个背景下，大部分团队，都是一招鲜吃遍天，不断的使用现有框架进行业务扩展。技术上的纵深发展很少。</p>
+
+<p>那么个人的成长，如何来实现呢？靠团队、靠自己。在更好的技术团队工作，在业务线上工作的同时，注重个人的技术积累。就目前我的认识，总结来说，分布式、并发、高性能、网络编程都是行业中非常核心的技术，个人纵深的发展，一定要落入某个桶中。而语言和算法，是核心基础。团队也非常重要，但是由于信息的高度不对称，找到一个靠谱的团队并且能顺利进入，太难了。</p>
+
+<p>不得不说，这一点上，淘宝的正明做得简直太好了。一直利用自己在技术上的深入研究，为阿里开源节流，和公司共同成长，让人佩服不已。</p>
+
+<p>综上来看，做系统、平台开发，做工程，对我来说是一个相对来说比较现实的选择。特别是机器学习算法相关的工程实现的话，便既可以让我继续研究和学习算法又可以与业务保持一定的距离，更专注于技术本身。</p>
 </div>
 
 
@@ -138,12 +136,12 @@ function show_defination(d) {
   
 
 
-<time datetime="2013-08-26T14:21:00+08:00" pubdate data-updated="true">Aug 26<span>th</span>, 2013</time>
+<time datetime="2014-08-02T15:48:00+08:00" pubdate data-updated="true">Aug 2<span>nd</span>, 2014</time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/codesegment/'>CodeSegment</a>, <a class='category' href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化</a>
+    <a class='category' href='/blog/categories/za-xiang/'>杂项</a>
   
 </span>
 
@@ -152,7 +150,7 @@ function show_defination(d) {
     
       <div class="sharing">
   
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/" data-via="" data-counturl="http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/" >Tweet</a>
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://xutianming.github.io/blog/2014/08/02/a-brief-summary-of-internship-in-alibaba/" data-via="" data-counturl="http://xutianming.github.io/blog/2014/08/02/a-brief-summary-of-internship-in-alibaba/" >Tweet</a>
   
   
   
@@ -161,10 +159,8 @@ function show_defination(d) {
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2013/08/20/recursion-problem-and-hmm-model/" title="Previous Post: ACM中递归问题解决方法思考">&laquo; ACM中递归问题解决方法思考</a>
+        <a class="basic-alignment left" href="/blog/2014/03/02/hadoop-owlqn/" title="Previous Post: 分布式机器学习算法框架的设计与实现">&laquo; 分布式机器学习算法框架的设计与实现</a>
       
-      
-        <a class="basic-alignment right" href="/blog/2013/09/02/dynamic-programming/" title="Next Post: 动态规划">动态规划 &raquo;</a>
       
     </p>
   </footer>
@@ -267,8 +263,8 @@ function show_defination(d) {
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/';
-        var disqus_url = 'http://xutianming.github.io/blog/2013/08/26/tooltips-on-mouse-hover-using-d3/';
+        var disqus_identifier = 'http://xutianming.github.io/blog/2014/08/02/a-brief-summary-of-internship-in-alibaba/';
+        var disqus_url = 'http://xutianming.github.io/blog/2014/08/02/a-brief-summary-of-internship-in-alibaba/';
         var disqus_script = 'embed.js';
       
     (function () {

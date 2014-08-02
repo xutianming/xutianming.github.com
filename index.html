@@ -9,7 +9,7 @@
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="最近一直在研究逻辑斯蒂回归算法。参考的是MSRA的Galen Andrew以及Jianfeng Gao的OWLQN算法。这一算法，是基于L-BFGS算法提出的。目标函数是带L1规范化的L2逻辑斯蒂回归损失函数，也就是说，即有L1也有L2，也可以只取其一。算法中， &hellip;">
+  <meta name="description" content="从5月份从搜狐离职进入阿里实习，已经有几个月没写博客了。这也基本上反映了我这段时间的状态，实习、个人学习，占据了这段时间我的所有时间。一直拼命奔跑，很久没停下来好好思考总结下了。校招马上开始，陆续会有很多面试，也是时候对自己的这段时间进行下回顾和思考了。 去年底来到搜狐，和克竞的合作， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -65,6 +65,64 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2014/08/02/a-brief-summary-of-internship-in-alibaba/">对算法、工程和个人方向的一些小思考</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2014-08-02T15:48:00+08:00" pubdate data-updated="true">Aug 2<span>nd</span>, 2014</time>
+        
+         | <a href="/blog/2014/08/02/a-brief-summary-of-internship-in-alibaba/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>从5月份从搜狐离职进入阿里实习，已经有几个月没写博客了。这也基本上反映了我这段时间的状态，实习、个人学习，占据了这段时间我的所有时间。一直拼命奔跑，很久没停下来好好思考总结下了。校招马上开始，陆续会有很多面试，也是时候对自己的这段时间进行下回顾和思考了。</p>
+
+<p>去年底来到搜狐，和克竞的合作，让我慢慢真正走入了算法的大门，让我对机器学习的理论有了一些比较深刻的认识，当然仅仅限于算法本身，我的工作，并没有涉及太多的业务。我也做了不少和算法工程实现相关的工作，也接触到了Spark。克竞离职之后，很多事情青黄不接，我的工作也一直没有太大进展，考虑到时间的宝贵，我离开搜狐来到了阿里，投奔钩哥。说是“投奔”钩哥，确实如此。我抱着可以对机器学习有更加深入的理解的目的，来到新的工作环境，开始了我新的旅行。如果说，在搜狐我真正接触了算法，那么在阿里，我对业界的算法有了更加真实的认识和一些理性的思考。</p>
+
+<p>阿里是一家相当务实的公司，所有的工作都是以业务发展为导向的。我所在的爱淘宝，目前的算法工作，主要是以策略为主，大多用传统的数据挖掘方法，机器学习的模型尚未大量使用。这一点，和我在搜狐研究院的时候的认识，有着比较大的出入，当时团队在工作的时候，更偏向于使用模型来解决问题。这是两种做事的风格，Leader作出这些选择，都是从团队的位置和目的出发的，无法评价说孰优孰劣。只能说，从对业务的发展来看，阿里更加务实，也会更加快速的迭代，业务发展更快。</p>
+
+<p>如此来说，短短几个月的实习时间里，我很难接触到模型相关的工作，而我个人并不是特别喜欢过早是深入某个业务领域。而各种数据权限限制，也让我这个实习生很难完全接触到阿里丰富的数据。我认识到这些，大约花了一个月的时间。接下来，我作出了转变。</p>
+
+<p>我在阿里的师兄是大家认可的团队里的技术大牛。我申请做了一些C++线上服务开发，也就是偏工程的工作。之前C++的学习和积累得到了发挥，我的工作也得到了师兄的认可，第一个项目马上就要上线，紧接着就要开始第二个项目了。</p>
+
+<p>这些经历让我慢慢发现了自己更加喜欢、也可能对我来说最现实的工作：那就是转而做系统。</p>
+
+<p>首先，做算法，对我来说，并不现实。技术要为业务服务，算法也不例外。要想成功的完成一个算法项目，特别是利用机器学习的方法。需要两方面：对数据的深刻理解和对模型的深刻理解。两者缺一不可。盲目的使用模型，不会带来效果的提升，消耗大量工作力而没有效果，在公司中对自己非常不利。那么更加务实的方法，就是先去理解数据，从分析业务，先解决关键问题，脚踏实地，一步一步优化效果。对数据理解足够深刻之后，算法工程师的模型方面的知识才会派上用场。前者需要时间沉淀，后者需要深厚的理论知识背景。总得来说，我两方面都没有，更关键的是，专注业务会让我越来越远离自己想成为的人。</p>
+
+<p>然后，一直以来，我都追求技术上的成就，希望成为一名出色的工程师。更加现实的，想要在互联网行业里有比较好的发展，技术是立足之本。繁重的业务需求，会让人停留于表面，技术上毫无成长，更好的方式显然是在业务成长的同时获得个人技术沉淀。但是，这样共同成长现实么？不得不说，大部分人做不好。目前国内互联网的发展思路是“快”，凡是讲究快速上线、快速迭代，业务上无创新、无改变，意味着离死也不远了（公司核心营收大头除外，比如搜索广告）。在这个背景下，大部分团队，都是一招鲜吃遍天，不断的使用现有框架进行业务扩展。技术上的纵深发展很少。</p>
+
+<p>那么个人的成长，如何来实现呢？靠团队、靠自己。在更好的技术团队工作，在业务线上工作的同时，注重个人的技术积累。就目前我的认识，总结来说，分布式、并发、高性能、网络编程都是行业中非常核心的技术，个人纵深的发展，一定要落入某个桶中。而语言和算法，是核心基础。团队也非常重要，但是由于信息的高度不对称，找到一个靠谱的团队并且能顺利进入，太难了。</p>
+
+<p>不得不说，这一点上，淘宝的正明做得简直太好了。一直利用自己在技术上的深入研究，为阿里开源节流，和公司共同成长，让人佩服不已。</p>
+
+<p>综上来看，做系统、平台开发，做工程，对我来说是一个相对来说比较现实的选择。特别是机器学习算法相关的工程实现的话，便既可以让我继续研究和学习算法又可以与业务保持一定的距离，更专注于技术本身。</p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -695,84 +753,6 @@ if current_word == word:
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/09/22/python-style-guide/">Python Style Guide</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-09-22T14:01:00+08:00" pubdate data-updated="true">Sep 22<span>nd</span>, 2013</time>
-        
-         | <a href="/blog/2013/09/22/python-style-guide/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>写Python一段时间了，由于从初学到现在，一直还在熟悉语法和各种数据结构，以事先功能为主，自觉代码写的非常丑陋，现在也写了不少Python代码了，是时候挑战下习惯，遵循合适的代码风格，写简单易读的代码，Be Pythonic!!</p>
-
-<p>本文主要参考了《<a href="http://google-styleguide.googlecode.com/svn/trunk/pyguide.html">Google Python Style Guide</a>》、《<a href="http://programmers.stackexchange.com/questions/119913/how-can-i-learn-to-effectively-write-pythonic-code">How can I learn to effectively write Pythonic code</a>》、《<a href="http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html">Code Like a Pythonista: Idiomatic Python</a>》三篇文章，摘取了其中我现在可能需要遵循的，因为有些做比较大的系统的项目才用到的，暂时就没写。我主要以写小算法和小工具为主。</p>
-
-<p>一、编码风格：</p>
-
-<p>1、不要使用分号，也不要利用分号把两个命令放在一行</p>
-
-<p>2、每行代码不超过80（特殊情况下，尽量不要把链接分开两行放）</p>
-
-<p>3、少用括号，条件语句和return语句不要用括号（特殊情况下，利用括号来进行断行可以）</p>
-
-<p>4、缩进用四空格（一般在文本编辑器里设置tab转四空格）</p>
-
-<p>5、空格使用。语法符号之后用空格，但是括号、花括号、方括号之后不要用。逗号冒号之后有个空格，但是之前不要有。赋值号前后有空格，但是在使用默认参数的时候，不要加。</p>
-
-<p>6、一系列的赋值或者相同的操作。没必要用空格来使赋值号对齐。</p>
-
-<p>7、字符串的使用。尽量使用string format和&#8217;%&lsquo;而不是&rsquo;+&lsquo;。在循环中构造字符串的时候，不要使用&rsquo;+&lsquo;和&rsquo;+=&lsquo;，而是把所有的字符串先存在一个list里，然后在循环结束之后，用join函数。（这一点需要格外注意，具体原因原文有）</p>
-
-<p>8、多行string尽量不要用三个连续的引号，因为会破坏整体的缩进。使用join函数拼接。</p>
-
-<p>9、file和socket使用完毕要显式关闭</p>
-
-<p>10、临时的实现临时插入的代码，使用TODO注释</p>
-
-<p>11、import的组织。每行一个，不要一次import多个。按照标准库、第三方库、程序特有的，这一顺序进行引用，统一级别按照字母顺序排序。</p>
-
-<p>12、命名规范。module_name, package_name, ClassName, method_name, ExceptionName, function_name, GLOBAL_CONSTANT_NAME, global_var_name, instance_var_name, function_parameter_name, local_var_name。大部分使用了小写和下划线。</p>
-
-<p>13、所有的脚本都应该是可import的，并且脚本被import之后，不能对当前脚本的功能有所影响。所以，脚本都应该有主函数！</p>
-
-<pre><code>def main():
-    …
-if __name__ == '__main__':
-    main()
-</code></pre>
-
-<p>不然的话，主程序的逻辑，会在被import的时候被执行。</p>
-
-<p>14、注释。使用正确的注释方法。见原文。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -785,11 +765,15 @@ if __name__ == '__main__':
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (9)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (2)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (9)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (3)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/08/02/a-brief-summary-of-internship-in-alibaba/">对算法、工程和个人方向的一些小思考</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/03/02/hadoop-owlqn/">分布式机器学习算法框架的设计与实现</a>
@@ -805,10 +789,6 @@ if __name__ == '__main__':
     
       <li class="post">
         <a href="/blog/2013/11/14/text-classification-step-by-step2/">行业关键词分类整理2</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/text-classification-step-by-step/">行业关键词分类项目总结1</a>
       </li>
     
   </ul>
@@ -848,7 +828,7 @@ if __name__ == '__main__':
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 106.66666666666667%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 106.66666666666667%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 120.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 133.33333333333334%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(9)</a> <a href='/blog/categories/杂项' style='font-size: 113.33333333333333%'>杂项(2)</a> <a href='/blog/categories/生活' style='font-size: 106.66666666666667%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 126.66666666666667%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 113.33333333333333%'>编程语言(2)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 106.66666666666667%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 106.66666666666667%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 120.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 133.33333333333334%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(9)</a> <a href='/blog/categories/杂项' style='font-size: 120.0%'>杂项(3)</a> <a href='/blog/categories/生活' style='font-size: 106.66666666666667%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 126.66666666666667%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 113.33333333333333%'>编程语言(2)</a> </span>
 </section>
 
   
