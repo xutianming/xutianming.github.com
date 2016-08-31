@@ -9,7 +9,7 @@
   <meta name="author" content="Xutianming">
 
   
-  <meta name="description" content="从5月份从搜狐离职进入阿里实习，已经有几个月没写博客了。这也基本上反映了我这段时间的状态，实习、个人学习，占据了这段时间我的所有时间。一直拼命奔跑，很久没停下来好好思考总结下了。校招马上开始，陆续会有很多面试，也是时候对自己的这段时间进行下回顾和思考了。 去年底来到搜狐，和克竞的合作， &hellip;">
+  <meta name="description" content="It has been a long time since I updated my last blog. I decided to continue to write blogs to summarize my technical work. In the last six months, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -66,6 +66,74 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/08/31/python-multiprocessing/">Python Multiprocessing</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-08-31T21:21:00+08:00" pubdate data-updated="true">Aug 31<span>st</span>, 2016</time>
+        
+         | <a href="/blog/2016/08/31/python-multiprocessing/#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>It has been a long time since I updated my last blog. I decided to continue to write blogs to summarize my technical work.</p>
+
+<p>In the last six months, Python has been my main programming language. I implemented a crawler and several web-based applications. I tried many excellent Python frameworks such as Django, Bottle, Scrapy. I will write several blogs to summarize the knowledge I got in my work.</p>
+
+<p>The topic of today is multi-processing.</p>
+
+<h3>Process vs Thread</h3>
+
+<p>Normally we prefer thread to process because in most systems threads are cheaper than processes.  And threads share the same virtual memory space which they have independent calling stack. But because of global interpreter lock, only one thread can execute in a particular time. To side-step this drawback and utilize the advantage of multi-cores, I prefer processes to threads in Python.</p>
+
+<h3>Multiprocessing Pool</h3>
+
+<p>In the multiprocessing module of python, process pool is a very simple way to distribute work to many workers, so it became my first choice in the very beginning. But I met many problems while using it.</p>
+
+<h4>memory leak</h4>
+
+<p>As described in the <a href="http://stackoverflow.com/questions/21485319/high-memory-usage-using-python-multiprocessing/21613370"><em>post1</em></a> <a href="http://stackoverflow.com/questions/8777324/leaking-memory-with-multiprocessing-pool-even-after-close"><em>post2</em></a>, the memory usage will increase after a while. So for a server side application which runs for a long time, multiprocessing pool is not a good choice.</p>
+
+<h4>pickling error</h4>
+
+<p>As described in the <a href="http://stackoverflow.com/questions/8804830/python-multiprocessing-pickling-error?rq=1"><em>post</em></a>, I had to use a global wrapper for the method to be invoked in pool which made my code kind of ugly.</p>
+
+<p>Using multiprocess pool, you lose a lot of control over your working processes which is not so convenient for complicated tasks. With all these drawbacks, I switched to Process class. I implemented a 2-level producer-consumer pattern which worked quite well.</p>
+
+<h3>Producer-consumer</h3>
+
+<p>In this <a href="https://pymotw.com/2/multiprocessing/communication.html"><em>article</em></a>, there is a good example of producer-consumer pattern which uses JoinableQueue and Poison Pill trick.</p>
+
+<h4>JoinableQueue vs Queue</h4>
+
+<p>JoinableQueue is a subclass of Queue and it adds task_done() and join() methods. <a href="http://stackoverflow.com/questions/31230241/queue-vs-joinablequeue-in-python"><em>ref</em></a></p>
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -702,58 +770,6 @@ if current_word == word:
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/09/23/summary-of-knowledge-visualization-project-stage-1/">知识可视化项目第一阶段小结</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-09-23T14:44:00+08:00" pubdate data-updated="true">Sep 23<span>rd</span>, 2013</time>
-        
-         | <a href="/blog/2013/09/23/summary-of-knowledge-visualization-project-stage-1/#disqus_thread">Comments</a>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>距离开始做数据可视化项目，已经过去了将近一个月的时间，目前项目的进展暂时告一段落，技术探索的工作基本完成，是个时候小结一下了。</p>
-
-<p>目前项目的思路是这样的，以维基百科为数据源，将维基百科上的知识（目前以机器学习为例）用可视化的方式展现，提高学习和探索的效率。</p>
-
-<p>具体来说，第一步。编写网页爬虫，从维基百科上下载数据，并且存储成结构化的数据（目前采用XML），存储的内容包括分类、关键词定义、页面关键词、参考文献。其中，关键词的定义，我们认为是维基百科词条页面的第一段，实际效果还不错，第一段文字往往能很好的直接阐释关键字的含义。页面关键词，就是那些本页面中比较重要的词，要想很好的了解本页面的内容，这些关键词对应的内容是非常重要的参考资料，在实现中，我们以页面内容中超链接的锚文字为基础，筛选那些链接指向的页面也包含本页关键字的链接锚文字，这一点是受到PageRank的思想所启发的；就效果来看，关键字筛选效果良好，但是这个条件明显太强了，在两个条件的限制下，大部分页面都只有7个以下的关键字，这样使得可视化的意义不大了，因为内容本来不多的情况下，单纯的文本就很容易理解的。参考文献，就是单纯是指维基百科词条页面中的参考文献，在目前的实现中，这些数据并没有加以利用。至于这些内容是如何从Web页面中提取的，主要靠对页面结构的分析，编写在网页爬虫的逻辑中。</p>
-
-<p>第二步，是文本挖掘相关。针对上面的页面关键词，我们想要给每个页面关键词，根据相关度进行打分，然后根据这个相关度打分，进行进一步的可视化，比如比较重要的关键词Size比较大什么的。具体研究，使用了NLP中称为关键字提取（Keyword Extraction）的技术，通过阅读相关论文，确定了卡方相关性检验和仿PageRank的TextRank算法这两种技术方案。二选其一的话，我们选择了卡方检验，因为TextRank对我们来说有一些致命的缺点，比如计算量大、基于词在滑动窗口中的同时出现等等。相对来说，卡方检验对我们来说，要现实的多。</p>
-
-<p>在我们参考的论文中，作者针对单篇论文，对关键字进行提取，打分自然就是卡方值。对语料数量的要求都不是特别高，但是对我们来说，我们现有的语料还是太少了，维基百科一般的词条页面中内容很少，用这些来进行关键词提取的话，估计效果甚微。于是我们决定扩充语料，经过研究，我们决定利用机器学习方面的会议(NIPS)及其提供的搜索引擎。因为项目做到这里我们已经决定先就一个词条，进行挖掘，实验下看下效果，所以就选了Machine_learning这个词条。扩充语料的过程还是用爬虫来完成的，模拟执行搜索引擎搜索，爬10篇论文下来作为语料。期间需要把pdf格式的转化成文本。经过一些折磨好歹完成语料的准备之后，开始进行关键词提取了，具体过程，一开始，我们想就第一步率先选出的关键字进行打分，算卡方值。但是语料准备好之后发现，我们选出的那些关键字，在这10篇论文中出现很少。究其原因，主要是我们扩充语料的思路有问题，试想维基百科中的词条，应该是比较宽泛的介绍性文字，而论文多是针对领域中某个小的问题的。从维基百科中挖掘出的关键词，很难应用到论文的语料中来。所以只能再次委曲求全，放弃对维基百科的关键字进行打分，改为直接从论文语料中进行关键词提取。</p>
-
-<p>接下来的过程就是按照论文中的方法一步一步来了，涉及到词干提取，词组提取，词组聚类，计算卡方值等等。也顺利提取出了关键字，效果还不错。这么一来数据挖掘和准备的工作基本上就完成了。</p>
-
-<p>第三步，可视化。可视化框架选择了D3js。用树状来表现分类，节点作为词条，点击词条，可视化展示此词条对应的关键词，使用了BubbleChart，主要涉及了D3js相关的javascript开发。</p>
-
-<p>截止今天，以上的工作就是第一阶段做的事情。总的来说，没有成功的基于维基百科的数据进行挖掘，但是也探索了一条可行的路线，只是这条路线看样子扩展性并不好。于是，近几天忙于寻找一些更好的方式，不论是从数据源还是从挖掘的效果上。最近发现了一个专业的维基百科挖掘工具，(WikipediaMiner)[<a href="http://wikipedia-miner.cms.waikato.ac.nz/index.html">http://wikipedia-miner.cms.waikato.ac.nz/index.html</a>]和weka出自同一所大学，<a href="http://sepans.com/wikistalker/">效果</a>非常好。所以下一步，决定针对这个进行一些研究。先研究其原理，对比下我们挖掘的算法，看看差距在哪里，然后试图利用这个现有的工具，做一些工作。</p>
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="/blog/page/2/">&larr; Older</a>
@@ -766,11 +782,15 @@ if current_word == word:
   
     <section>
   <h1>Categories</h1>
-    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (9)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (3)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (2)</a></li></ul>
+    <ul id="category-list"><li><a href='/blog/categories/codesegment/'>CodeSegment (1)</a></li><li><a href='/blog/categories/engineering/'>Engineering (1)</a></li><li><a href='/blog/categories/hadoop/'>Hadoop (1)</a></li><li><a href='/blog/categories/python/'>Python (1)</a></li><li><a href='/blog/categories/shu-ju-ke-shi-hua/'>数据可视化 (3)</a></li><li><a href='/blog/categories/wen-ben-wa-jue/'>文本挖掘 (5)</a></li><li><a href='/blog/categories/ji-qi-xue-xi/'>机器学习 (9)</a></li><li><a href='/blog/categories/za-xiang/'>杂项 (3)</a></li><li><a href='/blog/categories/sheng-huo/'>生活 (1)</a></li><li><a href='/blog/categories/suan-fa-ji-chu/'>算法基础 (4)</a></li><li><a href='/blog/categories/bian-cheng-yu-yan/'>编程语言 (2)</a></li></ul>
 </section>
 <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/08/31/python-multiprocessing/">Python Multiprocessing</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2014/08/02/a-brief-summary-of-internship-in-alibaba/">对算法、工程和个人方向的一些小思考</a>
@@ -786,10 +806,6 @@ if current_word == word:
     
       <li class="post">
         <a href="/blog/2014/03/01/java-reference-and-value-parameter/">Java值传递和引用传递</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2013/11/14/text-classification-step-by-step2/">行业关键词分类整理2</a>
       </li>
     
   </ul>
@@ -829,7 +845,7 @@ if current_word == word:
 
 <section>
   <h1>Tag Cloud</h1>
-    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 106.66666666666667%'>CodeSegment(1)</a> <a href='/blog/categories/hadoop' style='font-size: 106.66666666666667%'>Hadoop(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 120.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 133.33333333333334%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(9)</a> <a href='/blog/categories/杂项' style='font-size: 120.0%'>杂项(3)</a> <a href='/blog/categories/生活' style='font-size: 106.66666666666667%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 126.66666666666667%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 113.33333333333333%'>编程语言(2)</a> </span>
+    <span id="tag-cloud"><a href='/blog/categories/codesegment' style='font-size: 106.66666666666667%'>CodeSegment(1)</a> <a href='/blog/categories/engineering' style='font-size: 106.66666666666667%'>Engineering(1)</a> <a href='/blog/categories/hadoop' style='font-size: 106.66666666666667%'>Hadoop(1)</a> <a href='/blog/categories/python' style='font-size: 106.66666666666667%'>Python(1)</a> <a href='/blog/categories/数据可视化' style='font-size: 120.0%'>数据可视化(3)</a> <a href='/blog/categories/文本挖掘' style='font-size: 133.33333333333334%'>文本挖掘(5)</a> <a href='/blog/categories/机器学习' style='font-size: 160.0%'>机器学习(9)</a> <a href='/blog/categories/杂项' style='font-size: 120.0%'>杂项(3)</a> <a href='/blog/categories/生活' style='font-size: 106.66666666666667%'>生活(1)</a> <a href='/blog/categories/算法基础' style='font-size: 126.66666666666667%'>算法基础(4)</a> <a href='/blog/categories/编程语言' style='font-size: 113.33333333333333%'>编程语言(2)</a> </span>
 </section>
 
   
@@ -838,7 +854,7 @@ if current_word == word:
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2014 - Xutianming -
+  Copyright &copy; 2016 - Xutianming -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

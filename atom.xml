@@ -4,7 +4,7 @@
   <title><![CDATA[Xutianming Blog]]></title>
   <link href="http://xutianming.github.io/atom.xml" rel="self"/>
   <link href="http://xutianming.github.io/"/>
-  <updated>2014-12-17T20:18:22+08:00</updated>
+  <updated>2016-08-31T23:02:44+08:00</updated>
   <id>http://xutianming.github.io/</id>
   <author>
     <name><![CDATA[Xutianming]]></name>
@@ -12,6 +12,45 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Python Multiprocessing]]></title>
+    <link href="http://xutianming.github.io/blog/2016/08/31/python-multiprocessing/"/>
+    <updated>2016-08-31T21:21:00+08:00</updated>
+    <id>http://xutianming.github.io/blog/2016/08/31/python-multiprocessing</id>
+    <content type="html"><![CDATA[<p>It has been a long time since I updated my last blog. I decided to continue to write blogs to summarize my technical work.</p>
+
+<p>In the last six months, Python has been my main programming language. I implemented a crawler and several web-based applications. I tried many excellent Python frameworks such as Django, Bottle, Scrapy. I will write several blogs to summarize the knowledge I got in my work.</p>
+
+<p>The topic of today is multi-processing.</p>
+
+<h3>Process vs Thread</h3>
+
+<p>Normally we prefer thread to process because in most systems threads are cheaper than processes.  And threads share the same virtual memory space which they have independent calling stack. But because of global interpreter lock, only one thread can execute in a particular time. To side-step this drawback and utilize the advantage of multi-cores, I prefer processes to threads in Python.</p>
+
+<h3>Multiprocessing Pool</h3>
+
+<p>In the multiprocessing module of python, process pool is a very simple way to distribute work to many workers, so it became my first choice in the very beginning. But I met many problems while using it.</p>
+
+<h4>memory leak</h4>
+
+<p>As described in the <a href="http://stackoverflow.com/questions/21485319/high-memory-usage-using-python-multiprocessing/21613370"><em>post1</em></a> <a href="http://stackoverflow.com/questions/8777324/leaking-memory-with-multiprocessing-pool-even-after-close"><em>post2</em></a>, the memory usage will increase after a while. So for a server side application which runs for a long time, multiprocessing pool is not a good choice.</p>
+
+<h4>pickling error</h4>
+
+<p>As described in the <a href="http://stackoverflow.com/questions/8804830/python-multiprocessing-pickling-error?rq=1"><em>post</em></a>, I had to use a global wrapper for the method to be invoked in pool which made my code kind of ugly.</p>
+
+<p>Using multiprocess pool, you lose a lot of control over your working processes which is not so convenient for complicated tasks. With all these drawbacks, I switched to Process class. I implemented a 2-level producer-consumer pattern which worked quite well.</p>
+
+<h3>Producer-consumer</h3>
+
+<p>In this <a href="https://pymotw.com/2/multiprocessing/communication.html"><em>article</em></a>, there is a good example of producer-consumer pattern which uses JoinableQueue and Poison Pill trick.</p>
+
+<h4>JoinableQueue vs Queue</h4>
+
+<p>JoinableQueue is a subclass of Queue and it adds task_done() and join() methods. <a href="http://stackoverflow.com/questions/31230241/queue-vs-joinablequeue-in-python"><em>ref</em></a></p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[对算法、工程和个人方向的一些小思考]]></title>
@@ -753,33 +792,6 @@ C++:    cout &lt;&lt; ans &lt;&lt; endl &lt;&lt; endl;
 <p>物是人非，姥爷离开我们了，再也没人给我压岁钱，亲切的问我钱够不够花，学习情况怎么样，叮嘱我好好学习了。很快，爸爸妈妈也会搬离这个大院，住到新房子里，这里的样子，会越来越模糊吧。可是，这几乎我对泰安这个小城所有记忆的缩影，我18年最主要的记忆，都是和这里相关的。人总会长大，我也已经离开泰安5年了，还不知道以后会生活在哪个城市，但是应该很难再回来吧。</p>
 
 <p><img src="http://i.imgur.com/8xQVz35.jpg" alt="Imgur" /></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[核函数理解]]></title>
-    <link href="http://xutianming.github.io/blog/2013/07/20/understanding-kernel-function/"/>
-    <updated>2013-07-20T11:13:00+08:00</updated>
-    <id>http://xutianming.github.io/blog/2013/07/20/understanding-kernel-function</id>
-    <content type="html"><![CDATA[<p>SVM相关的理论知识看过几遍，但是感觉一直都不是理解的很透彻，特别是核函数的概念。今天又查阅了大家写的学习笔记等资料，结合自己的实践经验，感觉对核函数的理解更进一步了，所以记录在这里。</p>
-
-<p>一句话说明核函数的意义和作用：为使非线性可分问题转化为线性可分，将特征向量映射到高维，映射函数所满足的性质。</p>
-
-<p>具体说来，svm可以直接解决线性可分的分类问题，对于近似线性可分的问题，通过增加松弛变量，也可以实现分类。那么对于非线性可分的问题呢，比较直观的想法是映射，也就是通过把特征映射到高维，使非线性可分问题转化为线性可分的问题。但是就一般的实际问题来讲，寻找这个映射很困难，而且很难有可推广的方法。于是提出了kernel trick。可以绕过寻找这个映射函数。</p>
-
-<p>在理论公式的推导中，可以算出参数w的表示方法：</p>
-
-<p><img src="http://i.imgur.com/KqPVcLl.png?1" alt="Imgur" /></p>
-
-<p>于是分类超平面的函数也可以写成：</p>
-
-<p><img src="http://i.imgur.com/UVGLjMS.png?3" alt="Imgur" /></p>
-
-<p>这个公式中只有&lt;x(i),x>的内积形式，也就是说，我们映射之后，需要计算&lt;Fi(xi),Fi(x)>的内积。而我们定义的核函数，就是这一内积的形式。</p>
-
-<p><img src="http://i.imgur.com/lLicBOp.png?1" alt="Imgur" /></p>
-
-<p>如此一来，我们就可以用核函数直接替换内积，相当于，我们把原始的特征向量，映射到了高维，并且避免了寻找映射函数。而libsvm中推荐使用的RBF核函数，就是一个有着良好特性的核函数。可以将样本映射到一个更高维的空间，可以处理非线性的分类问题。而其关键的参数c和g分别为惩罚因子和核函数的参数。（RBF 核K(x, y) = exp(－γ || x －y ||的平方),γ > 0，g为gamma，就是r）。我们在使用libsvm训练之前，应该首先寻找最优的参数c和γ。</p>
 ]]></content>
   </entry>
   
